@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style>
+      html {
+        height: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        vertical-align: baseline;
+      }
+      body { height: 100%; margin: 0; padding: 0;}
+      .header {
+        height: 5%;
+        background-color: rgb(0, 120, 215);
+      }
+      .footer {
+        height: 5%;
+        background-color: rgb(242, 242, 242);
+      }
+      .map { height: 90%; }
+    </style>
+  </head>
+  <body>
+    <div class="header"></div>
+    <div id="map" class="map leaflet-container leaflet-fade-anim leaflet-grab"></div>
+    <div class="footer"></div>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script>
+      const map = L.map('map').setView([51.505, -0.09], 13);
+
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18
+      }).addTo(map);
+    </script>
+  </body>
+</html>
