@@ -5,8 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const routes = require('./routes/index');
-const Tracert = require('./models/tracert');
+const indexRoutes = require('./routes/index');
+const traceRoutes = require('./routes/trace');
 
 const app = express();
 
@@ -22,22 +22,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.post('/', (req, res) => {
-  try {
-    const tracer = new Tracert();
-
-    tracer.trace(req.body.domainName);
-    tracer.on('hop', (hop) => {
-      /*console.log(JSON.stringify(hop));*/
-    })
-  }
-  catch (err) {
-    console.log(err);
-  }
-
-  res.sendStatus(200);
-});
+app.use('/', indexRoutes);
+app.use('/trace', traceRoutes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

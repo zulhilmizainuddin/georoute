@@ -59,10 +59,11 @@
 
     $('#submit').click(() => {
       const domainName = $('#domainName').val();
-      $.post('/', {'domainName': domainName}, (data) => {
+      $.post('/trace', {'domainName': domainName}, (data) => {
 
       });
     });
+
   });
 
 </script>
