@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes/index');
+const tracert = require('./models/tracert');
 
 const app = express();
 
@@ -22,6 +23,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.post('/', (req, res) => {
+  try {
+    const tracer = new tracert();
+
+    tracer.trace(req.body.domainName);
+    tracer.on('hop', (hop) => {
+      /*console.log(JSON.stringify(hop));*/
+    })
+  }
+  catch (err) {
+    console.log(err);
+  }
+
+  res.sendStatus(200);
+});
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
