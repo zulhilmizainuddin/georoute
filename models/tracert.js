@@ -28,12 +28,13 @@ class Tracert extends events.EventEmitter {
         });
 
         tracert.on('close', (code) => {
+            this.emit('done', code);
             console.log(`tracert process exited with code ${code}`);
         });
     }
 
     static parseHop(hopData) {
-        const regex = '\\s*(\\d*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*(.+)';
+        const regex = '\\s*(\\d*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*([a-zA-Z0-9:.\\s]+)';
         const parsedData = new RegExp(regex, 'g').exec(hopData);
 
         let result = null;
@@ -43,7 +44,7 @@ class Tracert extends events.EventEmitter {
                 rtt1: parsedData[2],
                 rtt2: parsedData[3],
                 rtt3: parsedData[4],
-                ip: parsedData[5]
+                ip: parsedData[5].trim()
             };
         }
 
