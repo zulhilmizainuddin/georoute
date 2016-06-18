@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes/index');
-const tracert = require('./models/tracert');
+const Tracert = require('./models/tracert');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.post('/', (req, res) => {
   try {
-    const tracer = new tracert();
+    const tracer = new Tracert();
 
     tracer.trace(req.body.domainName);
     tracer.on('hop', (hop) => {
