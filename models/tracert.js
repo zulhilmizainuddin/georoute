@@ -34,7 +34,7 @@ class Tracert extends events.EventEmitter {
     }
 
     static parseHop(hopData) {
-        const regex = '\\s*(\\d*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*(\\d+\\sms|\\*)\\s*([a-zA-Z0-9:.\\s]+)';
+        const regex = /\s*(\d*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*([a-zA-Z0-9:.\s]+)/;
         const parsedData = new RegExp(regex, 'g').exec(hopData);
 
         let result = null;

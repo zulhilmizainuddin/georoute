@@ -34,7 +34,7 @@ class Traceroute extends events.EventEmitter {
     }
 
     static parseHop(hopData) {
-        const regex = '\\s*(\\d+)\\s+(?:([a-zA-Z0-9:.]+)\\s+([0-9.]+\\s+ms)|(\\*))';
+        const regex = /\s*(\d+)\s+(?:([a-zA-Z0-9:.]+)\s+([0-9.]+\s+ms)|(\*))/;
         const parsedData = new RegExp(regex, '').exec(hopData);
 
         let result = null;
