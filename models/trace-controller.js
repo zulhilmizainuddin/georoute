@@ -71,6 +71,10 @@ class TraceController extends events.EventEmitter {
 
             this.emit('data', result);
         });
+
+        tracer.on('done', (code) => {
+            this.emit('done', code);
+        });
     }
 }
 
