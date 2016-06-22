@@ -41,14 +41,14 @@ class Traceroute extends events.EventEmitter {
         if (parsedData !== null) {
             if (parsedData[4] === undefined) {
                 result = {
-                    hop: parsedData[1],
+                    hop: parseInt(parsedData[1]),
                     ip: parsedData[2],
                     rtt1: parsedData[3]
                 };
             }
             else {
                 result = {
-                    hop: parsedData[1],
+                    hop: parseInt(parsedData[1]),
                     ip: parsedData[4],
                     rtt1: parsedData[4]
                 };

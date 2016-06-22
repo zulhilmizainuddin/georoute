@@ -37,7 +37,7 @@ class PublicIp extends events.EventEmitter {
         }, 53, data.server, (err, res) => {
             socket.destroy();
 
-            let ip = null;
+            let ip = undefined;
             if (res !== undefined) {
                 ip = res.answers[0] && res.answers[0].data;
             }
