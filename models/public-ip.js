@@ -1,15 +1,50 @@
-const publicIp = require('public-ip');
+const dgram = require('dgram');
+const dns = require('dns-socket');
+const events = require('events');
 
-class PublicIp {
-    getOwnPublicIp(callback) {
-        publicIp.v4().then(ip => {
-            console.log(`public ipv4: ${ip}`);
-            callback(ip);
+class PublicIp extends events.EventEmitter {
+    queryOwnPublicIp() {
+        this.getIp('ipv4');
+        this.getIp('ipv6');
+    }
+
+    getIp(version) {
+        const type = {
+            ipv4: {
+                server: '208.67.222.222',
+                question: {
+                    name: 'myip.opendns.com',
+                    type: 'A'
+                }
+            },
+            ipv6: {
+                server: '2620:0:ccc::2',
+                question: {
+                    name: 'myip.opendns.com',
+                    type: 'AAAA'
+                }
+            }
+        };
+
+        const data = type[version];
+        const socket = dns({
+            socket: dgram.createSocket(version === 'ipv6' ? 'udp6' : 'udp4')
         });
 
-        publicIp.v6().then(ip => {
-            console.log(`public ipv4: ${ip}`);
-            callback(ip);
+        socket.query.bind(socket);
+        socket.query({
+            questions: [data.question]
+        }, 53, data.server, (err, res) => {
+            socket.destroy();
+
+            let ip = null;
+            if (res !== undefined) {
+                ip = res.answers[0] && res.answers[0].data;
+            }
+
+            console.log(`public ip ${version}: ${ip}`);
+
+            this.emit(version, ip);
         });
     }
 }
