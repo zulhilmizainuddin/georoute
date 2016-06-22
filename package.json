@@ -15,6 +15,7 @@
     "express": "~4.13.1",
     "ip2location-nodejs": "^7.0.1",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "validator": "^5.4.0"
   }
 }
