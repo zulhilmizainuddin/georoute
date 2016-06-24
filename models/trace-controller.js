@@ -34,47 +34,51 @@ class TraceController extends events.EventEmitter {
 
     trace(domainName) {
         const tracer = (os.platform() === 'win32') ? new Tracert() : new Traceroute();
-        tracer.trace(domainName);
-
         const ip2Location = new Ip2Location();
-        tracer.on('hop', (hop) => {
-            if (hop.hop === 1) {
-                hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
-            }
 
-            const geoInfo = ip2Location.query(hop.ip);
-            console.log(`trace-controller: geo info ${JSON.stringify(geoInfo)}`);
+        tracer
+            .on('pid', (pid) => {
+                this.emit('pid', pid);
+            })
+            .on('hop', (hop) => {
+                if (hop.hop === 1) {
+                    hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
+                }
 
-            let result = null;
-            if (geoInfo !== null) {
-                result = {
-                    hop: hop.hop,
-                    ip: hop.ip,
-                    rtt1: hop.rtt1,
-                    country: geoInfo.country_long,
-                    city: geoInfo.city,
-                    latitude: geoInfo.latitude,
-                    longitude: geoInfo.longitude
-                };
-            }
-            else {
-                result = {
-                    hop: hop.hop,
-                    ip: hop.ip,
-                    rtt1: hop.rtt1,
-                    country: '*',
-                    city: '*',
-                    latitude: '*',
-                    longitude: '*'
-                };
-            }
+                const geoInfo = ip2Location.query(hop.ip);
+                console.log(`trace-controller: geo info ${JSON.stringify(geoInfo)}`);
 
-            this.emit('data', result);
-        });
+                let result = null;
+                if (geoInfo !== null) {
+                    result = {
+                        hop: hop.hop,
+                        ip: hop.ip,
+                        rtt1: hop.rtt1,
+                        country: geoInfo.country_long,
+                        city: geoInfo.city,
+                        latitude: geoInfo.latitude,
+                        longitude: geoInfo.longitude
+                    };
+                }
+                else {
+                    result = {
+                        hop: hop.hop,
+                        ip: hop.ip,
+                        rtt1: hop.rtt1,
+                        country: '*',
+                        city: '*',
+                        latitude: '*',
+                        longitude: '*'
+                    };
+                }
 
-        tracer.on('done', (code) => {
-            this.emit('done', code);
-        });
+                this.emit('data', result);
+            })
+            .on('done', (code) => {
+                this.emit('done', code);
+            });
+
+        tracer.trace(domainName);
     }
 }
 

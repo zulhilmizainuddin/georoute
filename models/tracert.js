@@ -5,32 +5,35 @@ const readline = require('readline');
 class Tracert extends events.EventEmitter {
     trace(domainName) {
         const tracert = spawn('tracert', ['-d', domainName]);
-
-        readline.createInterface({
-            input: tracert.stdout,
-            terminal: false
-        })
-        .on('line', (line) => {
-            const hop = Tracert.parseHop(line);
-
-            if (hop !== null) {
-                this.emit('hop', hop);
-                console.log(`tracert hop: ${JSON.stringify(hop)}`);
-            }
-        });
-
-        readline.createInterface({
-            input: tracert.stderr,
-            terminal: false
-        })
-        .on('line', (line) => {
-            console.log(`tracert error: ${line}`);
-        });
-
         tracert.on('close', (code) => {
             this.emit('done', code);
             console.log(`tracert process exited with code ${code}`);
         });
+
+        this.emit('pid', tracert.pid);
+
+        if (tracert.pid !== undefined) {
+            readline.createInterface({
+                    input: tracert.stdout,
+                    terminal: false
+                })
+                .on('line', (line) => {
+                    const hop = Tracert.parseHop(line);
+
+                    if (hop !== null) {
+                        this.emit('hop', hop);
+                        console.log(`tracert hop: ${JSON.stringify(hop)}`);
+                    }
+                });
+
+            readline.createInterface({
+                    input: tracert.stderr,
+                    terminal: false
+                })
+                .on('line', (line) => {
+                    console.log(`tracert error: ${line}`);
+                });
+        }
     }
 
     static parseHop(hopData) {
