@@ -63,17 +63,17 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
-  $(document).ready(() => {
-    const map = L.map('map').setView([51.505, -0.09], 13);
+  $(document).ready(function() {
+    var map = L.map('map').setView([51.505, -0.09], 13);
 
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18
     }).addTo(map);
 
-    $('#submit').click(() => {
-      const domainName = $('#domainName').val();
-      $.post('/trace', {'domainName': domainName}, (data) => {
+    $('#submit').click(function() {
+      var domainName = $('#domainName').val();
+      $.post('/trace', {'domainName': domainName}, function(data) {
 
       });
     });
