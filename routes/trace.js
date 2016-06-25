@@ -29,19 +29,26 @@ router.post('/', (req, res, next) => {
     }
 
     const tracer = new TraceController();
-    tracer.on('pid', (pid) => {
-        req.session.pid = pid;
-        if (pid !== undefined) {
-            console.log(`trace process with id ${pid} created, returning http ${HttpStatus.OK}`);
+    tracer
+        .on('pid', (pid) => {
+            req.session.pid = pid;
+            if (pid !== undefined) {
+                console.log(`trace process with id ${pid} created, returning http ${HttpStatus.OK}`);
 
-            res.sendStatus(HttpStatus.OK);
-        }
-        else {
-            console.log(`trace process not created, returning http ${HttpStatus.INTERNAL_SERVER_ERROR}`);
+                res.sendStatus(HttpStatus.OK);
+            }
+            else {
+                console.log(`trace process not created, returning http ${HttpStatus.INTERNAL_SERVER_ERROR}`);
 
-            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    });
+                res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        })
+        .on('data', (data) => {
+            req.app.io.emit('data', data);
+        })
+        .on('done', (code) => {
+            req.app.io.emit('done');
+        });
 
     tracer.start(req.body.domainName);
 });

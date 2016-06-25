@@ -62,6 +62,7 @@
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
   $(document).ready(function() {
     var map = L.map('map').setView([51.505, -0.09], 13);
@@ -73,11 +74,20 @@
 
     $('#submit').click(function() {
       var domainName = $('#domainName').val();
-      $.post('/trace', {'domainName': domainName}, function(data) {
-
+      $.post('/trace', {'domainName': domainName}, function(status) {
+        if (status === 'OK') {
+          var socket = io();
+          socket
+            .on('data', function(data) {
+              console.log(data);
+            })
+            .on('done', function () {
+              socket.disconnect();
+              console.log('done');
+            });
+        }
       });
     });
-
   });
 
 </script>
