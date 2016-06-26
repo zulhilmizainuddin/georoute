@@ -70,7 +70,7 @@ class Tracert extends events.EventEmitter {
         let result = null;
         if (parsedData !== null) {
             result = {
-                hop: parseInt(parsedData[1]),
+                hop: parseInt(parsedData[1], 10),
                 rtt1: parsedData[2],
                 rtt2: parsedData[3],
                 rtt3: parsedData[4],
