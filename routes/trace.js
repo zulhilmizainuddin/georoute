@@ -1,11 +1,11 @@
 const express = require('express');
 const validator = require('validator');
-const process = require('process');
 const HttpStatus = require('http-status-codes');
 
 const router = express.Router();
 
 const TraceController = require('../models/trace-controller');
+const Terminator = require('../models/terminator');
 
 router.post('/', (req, res, next) => {
     console.log(`trace domain name ${req.body.domainName} received`);
@@ -18,14 +18,7 @@ router.post('/', (req, res, next) => {
     }
 
     if (req.session.pid !== undefined) {
-        console.log(`trace killing process id ${req.session.pid}`);
-
-        try {
-            process.kill(req.session.pid);
-        }
-        catch (err) {
-            console.log(err);
-        }
+        Terminator.terminate(req.session.pid);
     }
 
     let socketNamespace = null;
@@ -41,6 +34,8 @@ router.post('/', (req, res, next) => {
 
                     socket.on('disconnect', () => {
                         console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
+
+                        Terminator.terminate(pid);
                     });
                 });
 
