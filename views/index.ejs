@@ -74,9 +74,10 @@
 
     $('#submit').click(function() {
       var domainName = $('#domainName').val();
-      $.post('/trace', {'domainName': domainName}, function(status) {
-        if (status === 'OK') {
-          var socket = io();
+
+      $.post('/trace', {'domainName': domainName}, function(data, status) {
+        if (status === 'success') {
+          var socket = io('/' + data.pid);
           socket
             .on('data', function(data) {
               console.log(data);

@@ -28,14 +28,25 @@ router.post('/', (req, res, next) => {
         }
     }
 
+    let socketNamespace = null;
     const tracer = new TraceController();
     tracer
         .on('pid', (pid) => {
             req.session.pid = pid;
             if (pid !== undefined) {
+                socketNamespace = req.app.io.of('/' + pid);
+
+                socketNamespace.on('connection', (socket) => {
+                    console.log(`a user from ${socket.conn.remoteAddress} connected`);
+
+                    socket.on('disconnect', () => {
+                        console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
+                    });
+                });
+
                 console.log(`trace process with id ${pid} created, returning http ${HttpStatus.OK}`);
 
-                res.sendStatus(HttpStatus.OK);
+                res.status(HttpStatus.OK).send({ pid: pid });
             }
             else {
                 console.log(`trace process not created, returning http ${HttpStatus.INTERNAL_SERVER_ERROR}`);
@@ -44,10 +55,10 @@ router.post('/', (req, res, next) => {
             }
         })
         .on('data', (data) => {
-            req.app.io.emit('data', data);
+            socketNamespace.emit('data', data);
         })
         .on('done', (code) => {
-            req.app.io.emit('done');
+            socketNamespace.emit('done');
         });
 
     tracer.start(req.body.domainName);
