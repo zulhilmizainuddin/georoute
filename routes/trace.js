@@ -4,7 +4,8 @@ const HttpStatus = require('http-status-codes');
 
 const router = express.Router();
 
-const TraceController = require('../models/trace-controller');
+const Executor = require('../models/executor');
+const Ip2Location = require('../models/ip2location');
 const Terminator = require('../models/terminator');
 
 router.post('/', (req, res, next) => {
@@ -22,8 +23,8 @@ router.post('/', (req, res, next) => {
     }
 
     let socketNamespace = null;
-    const tracer = new TraceController();
-    tracer
+    const executor = new Executor(new Ip2Location());
+    executor
         .on('pid', (pid) => {
             req.session.pid = pid;
             if (pid !== undefined) {
@@ -59,7 +60,7 @@ router.post('/', (req, res, next) => {
             socketNamespace.emit('done');
         });
 
-    tracer.start(req.body.domainName);
+    executor.start(req.body.domainName);
 });
 
 module.exports = router;

@@ -2,14 +2,15 @@ const os = require('os');
 const net = require('net');
 const events = require('events');
 
-const Ip2Location = require('./ip2location');
 const PublicIp = require('./public-ip');
 const Tracert = require('./tracert');
 const Traceroute = require('./traceroute');
 
-class TraceController extends events.EventEmitter {
-    constructor() {
+class Executor extends events.EventEmitter {
+    constructor(dbConnector) {
         super();
+
+        this.dbConnector = dbConnector;
 
         this.publicIpv4 = null;
         this.publicIpv6 = null;
@@ -34,7 +35,6 @@ class TraceController extends events.EventEmitter {
 
     trace(domainName) {
         const tracer = (os.platform() === 'win32') ? new Tracert() : new Traceroute();
-        const ip2Location = new Ip2Location();
 
         tracer
             .on('pid', (pid) => {
@@ -48,8 +48,8 @@ class TraceController extends events.EventEmitter {
                     hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
                 }
 
-                const geoInfo = ip2Location.query(hop.ip);
-                console.log(`trace-controller: geo info ${JSON.stringify(geoInfo)}`);
+                const geoInfo = this.dbConnector.query(hop.ip);
+                console.log(`executor: geo info ${JSON.stringify(geoInfo)}`);
 
                 let result = null;
                 if (geoInfo !== null) {
@@ -85,4 +85,4 @@ class TraceController extends events.EventEmitter {
     }
 }
 
-module.exports = TraceController;
+module.exports = Executor;
