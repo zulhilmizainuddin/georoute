@@ -79,6 +79,9 @@
         if (status === 'success') {
           var socket = io('/' + data.pid);
           socket
+            .on('destination', function(destination) {
+              console.log('destination: ' + destination);
+            })
             .on('data', function(data) {
               console.log(data);
             })

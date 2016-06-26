@@ -12,14 +12,24 @@ class Tracert extends events.EventEmitter {
 
         this.emit('pid', tracert.pid);
 
+        let isDestinationCaptured = false;
         if (tracert.pid !== undefined) {
             readline.createInterface({
                     input: tracert.stdout,
                     terminal: false
                 })
                 .on('line', (line) => {
-                    const hop = Tracert.parseHop(line);
+                    if (!isDestinationCaptured) {
+                        const destination = Tracert.parseDestination(line);
+                        if (destination !== null) {
+                            this.emit('destination', destination);
+                            console.log(`tracert destination: ${destination}`);
 
+                            isDestinationCaptured = true;
+                        }
+                    }
+
+                    const hop = Tracert.parseHop(line);
                     if (hop !== null) {
                         this.emit('hop', hop);
                         console.log(`tracert hop: ${JSON.stringify(hop)}`);
@@ -36,8 +46,25 @@ class Tracert extends events.EventEmitter {
         }
     }
 
+    static parseDestination(data) {
+        const regex = /^Tracing\sroute\sto\s([a-zA-Z0-9:.]+)\s(?:\[([a-zA-Z0-9:.]+)\])?/;
+        const parsedData = new RegExp(regex, '').exec(data);
+
+        let result = null;
+        if (parsedData !== null) {
+            if (parsedData[2] !== undefined) {
+                result = parsedData[2];
+            }
+            else {
+                result = parsedData[1];
+            }
+        }
+
+        return result;
+    }
+
     static parseHop(hopData) {
-        const regex = /\s*(\d*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*([a-zA-Z0-9:.\s]+)/;
+        const regex = /^\s*(\d*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*(\d+\sms|\*)\s*([a-zA-Z0-9:.\s]+)/;
         const parsedData = new RegExp(regex, '').exec(hopData);
 
         let result = null;

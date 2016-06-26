@@ -54,6 +54,9 @@ router.post('/', (req, res, next) => {
                 res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         })
+        .on('destination', (destination) => {
+            socketNamespace.emit('destination', destination);
+        })
         .on('data', (data) => {
             socketNamespace.emit('data', data);
         })

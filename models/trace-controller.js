@@ -40,6 +40,9 @@ class TraceController extends events.EventEmitter {
             .on('pid', (pid) => {
                 this.emit('pid', pid);
             })
+            .on('destination', (destination) => {
+                this.emit('destination', destination);
+            })
             .on('hop', (hop) => {
                 if (hop.hop === 1) {
                     hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
