@@ -11,7 +11,7 @@ const Terminator = require('../models/terminator');
 router.post('/', (req, res, next) => {
     console.log(`trace domain name ${req.body.domainName} received`);
 
-    if (!validator.isURL(req.body.domainName) && !validator.isIP(req.body.domainName)) {
+    if (!validator.isFQDN(req.body.domainName) && !validator.isIP(req.body.domainName)) {
         console.log(`trace not a valid domain name or ip received, returning http ${HttpStatus.BAD_REQUEST}`);
 
         res.sendStatus(HttpStatus.BAD_REQUEST);
@@ -51,6 +51,11 @@ router.post('/', (req, res, next) => {
             }
         })
         .on('destination', (destination) => {
+            if (!socketNamespace.connected) {
+                Terminator.terminate(req.session.pid);
+                return;
+            }
+
             socketNamespace.emit('destination', destination);
         })
         .on('data', (data) => {
