@@ -23,6 +23,7 @@ router.post('/', (req, res, next) => {
     }
 
     let socketNamespace = null;
+    let isSocketConnected = false;
     const executor = new Executor(new Ip2Location());
     executor
         .on('pid', (pid) => {
@@ -33,6 +34,7 @@ router.post('/', (req, res, next) => {
                 socketNamespace.on('connection', (socket) => {
                     console.log(`a user from ${socket.conn.remoteAddress} connected`);
 
+                    isSocketConnected = true;
                     socket.on('disconnect', () => {
                         console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
 
@@ -51,7 +53,7 @@ router.post('/', (req, res, next) => {
             }
         })
         .on('destination', (destination) => {
-            if (!socketNamespace.connected) {
+            if (!isSocketConnected) {
                 Terminator.terminate(req.session.pid);
                 return;
             }
