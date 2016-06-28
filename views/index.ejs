@@ -79,6 +79,13 @@
         if (status === 'success') {
           var socket = io('/' + data.pid);
           socket
+            .on('connect', function() {
+              console.log('connected to server');
+            })
+            .on('connect_error', function() {
+              console.log('connection error, disconnecting socket');
+              socket.disconnect();
+            })
             .on('destination', function(destination) {
               console.log('destination: ' + destination);
             })
