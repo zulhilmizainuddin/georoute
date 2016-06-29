@@ -47,7 +47,9 @@ class Executor extends events.EventEmitter {
                 let result = null;
                 if (destinationGeoInfo !== null) {
                     result = {
+                        hop: '*',
                         ip : destination,
+                        rtt1: '*',
                         country: destinationGeoInfo.country_long,
                         city: destinationGeoInfo.city,
                         latitude: destinationGeoInfo.latitude,
@@ -56,7 +58,9 @@ class Executor extends events.EventEmitter {
                 }
                 else {
                     result = {
+                        hop: '*',
                         ip: destination,
+                        rtt1: '*',
                         country: '*',
                         city: '*',
                         latitude: '*',

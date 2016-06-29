@@ -51,8 +51,8 @@ $(document).ready(function() {
                             var marker = L.marker([destinationData.latitude, destinationData.longitude]).addTo(map);
 
                             var popup =
-                                '<b>' + 'Hop ' + '*' + '</b>' + '<br>' +
-                                'RTT: ' + '*' + '<br>' +
+                                '<b>' + 'Hop ' + destinationData.hop + '</b>' + '<br>' +
+                                'RTT: ' + destinationData.rtt1 + '<br>' +
                                 'City: ' + destinationData.city + '<br>' +
                                 'Country: ' + destinationData.country + '<br>' +
                                 'Latitude: ' + destinationData.latitude + '<br>' +
