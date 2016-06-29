@@ -41,7 +41,30 @@ class Executor extends events.EventEmitter {
                 this.emit('pid', pid);
             })
             .on('destination', (destination) => {
-                this.emit('destination', destination);
+                const destinationGeoInfo = this.dbConnector.query(destination);
+                console.log(`executor: destination geo info ${JSON.stringify(destinationGeoInfo)}`);
+
+                let result = null;
+                if (destinationGeoInfo !== null) {
+                    result = {
+                        ip : destination,
+                        country: destinationGeoInfo.country_long,
+                        city: destinationGeoInfo.city,
+                        latitude: destinationGeoInfo.latitude,
+                        longitude: destinationGeoInfo.longitude
+                    };
+                }
+                else {
+                    result = {
+                        ip: destination,
+                        country: '*',
+                        city: '*',
+                        latitude: '*',
+                        longitude: '*'
+                    };
+                }
+
+                this.emit('destination', result);
             })
             .on('hop', (hop) => {
                 if (hop.hop === 1) {

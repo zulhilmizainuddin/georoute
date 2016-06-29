@@ -11,6 +11,9 @@ $(document).ready(function() {
 
         $.post('/trace', {'domainName': domainName}, function(data, status) {
             if (status === 'success') {
+                var destinationData = null;
+                var hopData = [];
+
                 var socket = io('/' + data.pid);
                 socket
                     .on('connect', function() {
@@ -21,12 +24,43 @@ $(document).ready(function() {
                         socket.disconnect();
                     })
                     .on('destination', function(destination) {
-                        console.log('destination: ' + destination);
+                        destinationData = destination;
+                        console.log(destination);
                     })
                     .on('data', function(data) {
                         console.log(data);
+
+                        if (data.latitude !== '*' && data.longitude !== '*') {
+                            hopData.push(data);
+
+                            var marker = L.marker([data.latitude, data.longitude]).addTo(map);
+
+                            var popup =
+                                '<b>' + 'Hop ' + data.hop + '</b>' + '<br>' +
+                                'RTT: ' + data.rtt1 + '<br>' +
+                                'City: ' + data.city + '<br>' +
+                                'Country: ' + data.country + '<br>' +
+                                'Latitude: ' + data.latitude + '<br>' +
+                                'Longitude: ' + data.longitude + '<br>';
+
+                            marker.bindPopup(popup);
+                        }
                     })
                     .on('done', function () {
+                        if (hopData[hopData.length -1].ip !== destinationData.ip) {
+                            var marker = L.marker([destinationData.latitude, destinationData.longitude]).addTo(map);
+
+                            var popup =
+                                '<b>' + 'Hop ' + '*' + '</b>' + '<br>' +
+                                'RTT: ' + '*' + '<br>' +
+                                'City: ' + destinationData.city + '<br>' +
+                                'Country: ' + destinationData.country + '<br>' +
+                                'Latitude: ' + destinationData.latitude + '<br>' +
+                                'Longitude: ' + destinationData.longitude + '<br>';
+
+                            marker.bindPopup(popup);
+                        }
+
                         socket.disconnect();
                         console.log('done');
                     });
