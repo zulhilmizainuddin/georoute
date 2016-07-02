@@ -7,9 +7,15 @@ $(document).ready(function() {
     }).addTo(map);
 
     $('#submit').click(function() {
+        map.eachLayer(function(layer) {
+            if (!layer._url) {
+                map.removeLayer(layer);
+            }
+        });
+
         var domainName = $('#domainName').val();
 
-        $.post('/trace', {'domainName': domainName}, function(data, status) {
+        $.post('/trace', {domainName: domainName}, function(data, status) {
             if (status === 'success') {
                 var destinationData = null;
                 var hopData = [];
