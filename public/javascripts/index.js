@@ -3,6 +3,7 @@ $(document).ready(function() {
     map.initialize();
 
     $('#submit').click(function() {
+        map.clearData();
         map.removeLayers();
 
         var domainName = $('#domainName').val();
@@ -50,6 +51,8 @@ $(document).ready(function() {
 
 var Mapping = function() {
     this.hopData = [];
+    this.polylinePoints = null;
+    this.polylines = null;
 };
 
 Mapping.prototype.initialize = function() {
@@ -95,10 +98,16 @@ Mapping.prototype.addPolylines = function(data) {
         return new L.LatLng(data.latitude, data.longitude);
     });
 
-    if (this.polylines !== undefined) this.map.removeLayer(this.polylines);
+    if (this.polylines !== null) this.map.removeLayer(this.polylines);
 
     this.polylines = new L.Polyline(this.polylinePoints);
 
     this.map.addLayer(this.polylines);
     this.map.fitBounds(this.polylines.getBounds());
+};
+
+Mapping.prototype.clearData = function() {
+    this.hopData = [];
+    this.polylinePoints = null;
+    this.polylines = null;
 };
