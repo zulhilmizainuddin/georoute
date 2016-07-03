@@ -24,6 +24,9 @@ router.post('/', (req, res, next) => {
 
     let socketNamespace = null;
     let isSocketConnected = false;
+    const dataQueue = [];
+    let destinationHolder = null;
+
     const executor = new Executor(new Ip2Location());
     executor
         .on('pid', (pid) => {
@@ -53,17 +56,19 @@ router.post('/', (req, res, next) => {
             }
         })
         .on('destination', (destination) => {
-            if (!isSocketConnected) {
-                Terminator.terminate(req.session.pid);
-                return;
-            }
-
-            socketNamespace.emit('destination', destination);
+            destinationHolder = destination;
         })
         .on('data', (data) => {
-            socketNamespace.emit('data', data);
+            dataQueue.push(data);
+
+            if (isSocketConnected) {
+                while (dataQueue.length) {
+                    socketNamespace.emit('data', dataQueue.shift());
+                }
+            }
         })
         .on('done', (code) => {
+            socketNamespace.emit('destination', destinationHolder);
             socketNamespace.emit('done');
         });
 
