@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var map = new Map();
+    var map = new Mapping();
     map.initialize();
 
     $('#submit').click(function() {
@@ -48,11 +48,11 @@ $(document).ready(function() {
     });
 });
 
-var Map = function() {
+var Mapping = function() {
     this.hopData = [];
 };
 
-Map.prototype.initialize = function() {
+Mapping.prototype.initialize = function() {
     this.map = L.map('map').setView([51.505, -0.09], 13);
 
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -61,7 +61,7 @@ Map.prototype.initialize = function() {
     }).addTo(this.map);
 };
 
-Map.prototype.removeLayers = function() {
+Mapping.prototype.removeLayers = function() {
     this.map.eachLayer(function(layer) {
         if (!layer._url) {
             this.map.removeLayer(layer);
@@ -69,14 +69,14 @@ Map.prototype.removeLayers = function() {
     }.bind(this));
 };
 
-Map.prototype.addMarker = function(data) {
+Mapping.prototype.addMarker = function(data) {
     var marker = L.marker([data.latitude, data.longitude]).addTo(this.map);
     var popup = this.popupTemplate(data);
 
     marker.bindPopup(popup);
 };
 
-Map.prototype.popupTemplate = function(data) {
+Mapping.prototype.popupTemplate = function(data) {
     var popup =
         '<b>' + 'Hop ' + data.hop + '</b><br>' +
         'RTT: ' + data.rtt1 + '<br>' +
@@ -88,7 +88,7 @@ Map.prototype.popupTemplate = function(data) {
     return popup;
 };
 
-Map.prototype.addPolylines = function(data) {
+Mapping.prototype.addPolylines = function(data) {
     this.hopData.push(data);
 
     this.polylinePoints = this.hopData.map(function(data) {
