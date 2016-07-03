@@ -76,12 +76,12 @@ Mapping.prototype.addMarker = function(data) {
     var marker = L.marker([data.latitude, data.longitude]).addTo(this.map);
     var popup = this.popupTemplate(data);
 
-    marker.bindPopup(popup);
+    marker.bindPopup(popup).openPopup();
 };
 
 Mapping.prototype.popupTemplate = function(data) {
     var popup =
-        '<b>' + 'Hop ' + data.hop + '</b><br>' +
+        '<b>Hop ' + data.hop + '</b><br>' +
         'RTT: ' + data.rtt1 + '<br>' +
         'City: ' + data.city + '<br>' +
         'Country: ' + data.country + '<br>' +
