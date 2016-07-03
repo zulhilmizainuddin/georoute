@@ -1,17 +1,9 @@
 $(document).ready(function() {
-    var map = L.map('map').setView([51.505, -0.09], 13);
-
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 18
-    }).addTo(map);
+    var map = new Map();
+    map.initialize();
 
     $('#submit').click(function() {
-        map.eachLayer(function(layer) {
-            if (!layer._url) {
-                map.removeLayer(layer);
-            }
-        });
+        map.removeLayers();
 
         var domainName = $('#domainName').val();
 
@@ -19,8 +11,6 @@ $(document).ready(function() {
             if (status === 'success') {
                 var destinationData = null;
                 var hopData = [];
-                var polylinePoints  = null;
-                var polylines = null;
 
                 var socket = io('/' + data.pid);
                 socket
@@ -33,7 +23,6 @@ $(document).ready(function() {
                     })
                     .on('destination', function(destination) {
                         destinationData = destination;
-                        console.log(destination);
                     })
                     .on('data', function(data) {
                         console.log(data);
@@ -41,56 +30,14 @@ $(document).ready(function() {
                         if (data.latitude !== '*' && data.longitude !== '*') {
                             hopData.push(data);
 
-                            var marker = L.marker([data.latitude, data.longitude]).addTo(map);
-
-                            var popup =
-                                '<b>' + 'Hop ' + data.hop + '</b>' + '<br>' +
-                                'RTT: ' + data.rtt1 + '<br>' +
-                                'City: ' + data.city + '<br>' +
-                                'Country: ' + data.country + '<br>' +
-                                'Latitude: ' + data.latitude + '<br>' +
-                                'Longitude: ' + data.longitude + '<br>';
-
-                            marker.bindPopup(popup);
-
-                            polylinePoints = hopData.map(function(data) {
-                                return new L.LatLng(data.latitude, data.longitude);
-                            });
-
-                            if (polylines !== null) map.removeLayer(polylines);
-
-                            polylines = new L.Polyline(polylinePoints);
-
-                            map.addLayer(polylines);
-                            map.fitBounds(polylines.getBounds());
+                            map.addMarker(data);
+                            map.addPolylines(data);
                         }
                     })
                     .on('done', function () {
-                        if (hopData[hopData.length -1].ip !== destinationData.ip) {
-                            hopData.push(destinationData);
-
-                            var marker = L.marker([destinationData.latitude, destinationData.longitude]).addTo(map);
-
-                            var popup =
-                                '<b>' + 'Hop ' + destinationData.hop + '</b>' + '<br>' +
-                                'RTT: ' + destinationData.rtt1 + '<br>' +
-                                'City: ' + destinationData.city + '<br>' +
-                                'Country: ' + destinationData.country + '<br>' +
-                                'Latitude: ' + destinationData.latitude + '<br>' +
-                                'Longitude: ' + destinationData.longitude + '<br>';
-
-                            marker.bindPopup(popup);
-
-                            polylinePoints = hopData.map(function(data) {
-                                return new L.LatLng(data.latitude, data.longitude);
-                            });
-
-                            if (polylines !== null) map.removeLayer(polylines);
-
-                            polylines = new L.Polyline(polylinePoints);
-
-                            map.addLayer(polylines);
-                            map.fitBounds(polylines.getBounds());
+                        if (hopData[hopData.length - 1].ip !== destinationData.ip) {
+                            map.addMarker(destinationData);
+                            map.addPolylines(destinationData);
                         }
 
                         socket.disconnect();
@@ -100,3 +47,58 @@ $(document).ready(function() {
         });
     });
 });
+
+var Map = function() {
+    this.hopData = [];
+};
+
+Map.prototype.initialize = function() {
+    this.map = L.map('map').setView([51.505, -0.09], 13);
+
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18
+    }).addTo(this.map);
+};
+
+Map.prototype.removeLayers = function() {
+    this.map.eachLayer(function(layer) {
+        if (!layer._url) {
+            this.map.removeLayer(layer);
+        }
+    }.bind(this));
+};
+
+Map.prototype.addMarker = function(data) {
+    var marker = L.marker([data.latitude, data.longitude]).addTo(this.map);
+    var popup = this.popupTemplate(data);
+
+    marker.bindPopup(popup);
+};
+
+Map.prototype.popupTemplate = function(data) {
+    var popup =
+        '<b>' + 'Hop ' + data.hop + '</b><br>' +
+        'RTT: ' + data.rtt1 + '<br>' +
+        'City: ' + data.city + '<br>' +
+        'Country: ' + data.country + '<br>' +
+        'Latitude: ' + data.latitude + '<br>' +
+        'Longitude: ' + data.longitude + '<br>';
+
+    return popup;
+};
+
+Map.prototype.addPolylines = function(data) {
+    this.hopData.push(data);
+
+    this.polylinePoints = this.hopData.map(function(data) {
+        return new L.LatLng(data.latitude, data.longitude);
+    });
+
+    if (this.polylines !== undefined) this.map.removeLayer(this.polylines);
+
+    this.polylines = new L.Polyline(this.polylinePoints);
+
+    this.map.addLayer(this.polylines);
+    this.map.fitBounds(this.polylines.getBounds());
+};
