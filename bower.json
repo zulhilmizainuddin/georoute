@@ -1,0 +1,28 @@
+{
+  "name": "georoute",
+  "description": "Traceroute on a map",
+  "main": "/bin/www",
+  "authors": [
+    "Zulhilmi Bin Mohamed Zainuddin"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "traceroute",
+    "tracert",
+    "map"
+  ],
+  "homepage": "https://github.com/zulhilmizainuddin/georoute",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2",
+    "leaflet": "1",
+    "bootstrap": "^3.3.6",
+    "socket.io": "^1.4.8"
+  }
+}
