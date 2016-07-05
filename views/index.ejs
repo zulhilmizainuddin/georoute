@@ -2,48 +2,13 @@
 <html>
 <head>
   <title><%= title %></title>
-  <style>
-    * {
-      -webkit-border-radius: 0 !important;
-      -moz-border-radius: 0 !important;
-      border-radius: 0 !important;
-    }
-
-    html {
-      height: 100%;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      vertical-align: baseline;
-    }
-    body
-    {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    .header {
-      height: 40px;
-      background-color: rgb(0, 120, 215);
-    }
-    .footer {
-      height: 20px;
-      background-color: rgb(247, 247, 249);
-    }
-    .map {
-      height: calc(100% - (40px + 20px));
-    }
-
-  </style>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel="stylesheet" href="leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" />
-  <!--<link rel='stylesheet' href='/stylesheets/style.css' />-->
 </head>
 <body>
 <div class="header">
-  <!--<form role="form" method="post" action="">-->
-  <div class="col-sm-5 col-lg-3" style="float: right; margin-top: 5px">
+  <div id="input" class="col-sm-5 col-lg-3">
     <div class="input-group">
       <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="Domain name or ip address">
       <span class="input-group-btn">
@@ -51,12 +16,11 @@
       </span>
     </div>
   </div>
-  <!--</form>-->
 </div>
 <div id="map" class="map leaflet-container leaflet-fade-anim leaflet-grab"></div>
 <div class="footer">
-  <ul style="list-style: none">
-    <li>© 2016 <%= title %></li>
+  <ul id="footerinfo">
+    <li>© <%= year %> <%= title %></li>
   </ul>
 </div>
 <script src="leaflet/dist/leaflet.js"></script>
