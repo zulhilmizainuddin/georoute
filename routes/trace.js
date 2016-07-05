@@ -1,5 +1,6 @@
 const express = require('express');
 const validator = require('validator');
+const uuid = require('node-uuid');
 const HttpStatus = require('http-status-codes');
 
 const router = express.Router();
@@ -18,61 +19,41 @@ router.post('/', (req, res, next) => {
         return;
     }
 
-    if (req.session.pid !== undefined) {
-        Terminator.terminate(req.session.pid);
-    }
+    const guid = uuid.v4();
+    req.session.guid = guid;
+    res.status(HttpStatus.OK).send({ guid: guid });
 
-    let socketNamespace = null;
-    let isSocketConnected = false;
-    const dataQueue = [];
-    let destinationHolder = null;
+    const socketNamespace = req.app.io.of('/' + guid);
+    socketNamespace.on('connection', (socket) => {
+        console.log(`a user from ${socket.conn.remoteAddress} connected`);
 
-    const executor = new Executor(new Ip2Location());
-    executor
-        .on('pid', (pid) => {
-            req.session.pid = pid;
-            if (pid !== undefined) {
-                socketNamespace = req.app.io.of('/' + pid);
+        let pidHolder = null;
+        const executor = new Executor(new Ip2Location());
+        executor
+            .on('pid', (pid) => {
+                pidHolder = pid;
+            })
+            .on('destination', (destination) => {
+                socketNamespace.emit('destination', destination);
+            })
+            .on('data', (data) => {
+                socketNamespace.emit('data', data);
+            })
+            .on('done', (code) => {
+                socketNamespace.emit('done');
+            });
 
-                socketNamespace.on('connection', (socket) => {
-                    console.log(`a user from ${socket.conn.remoteAddress} connected`);
+        socket.on('disconnect', () => {
+            console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
 
-                    isSocketConnected = true;
-                    socket.on('disconnect', () => {
-                        console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
-
-                        Terminator.terminate(pid);
-                    });
-                });
-
-                console.log(`trace process with id ${pid} created, returning http ${HttpStatus.OK}`);
-
-                res.status(HttpStatus.OK).send({ pid: pid });
+            if (pidHolder) {
+                Terminator.terminate(pidHolder);
             }
-            else {
-                console.log(`trace process not created, returning http ${HttpStatus.INTERNAL_SERVER_ERROR}`);
-
-                res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        })
-        .on('destination', (destination) => {
-            destinationHolder = destination;
-        })
-        .on('data', (data) => {
-            dataQueue.push(data);
-
-            if (isSocketConnected) {
-                while (dataQueue.length) {
-                    socketNamespace.emit('data', dataQueue.shift());
-                }
-            }
-        })
-        .on('done', (code) => {
-            socketNamespace.emit('destination', destinationHolder);
-            socketNamespace.emit('done');
         });
 
-    executor.start(req.body.domainName);
+        executor.start(req.body.domainName);
+    });
+
 });
 
 module.exports = router;

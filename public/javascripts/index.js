@@ -13,7 +13,7 @@ $(document).ready(function() {
                 var destinationData = null;
                 var hopData = [];
 
-                var socket = io('/' + data.pid);
+                var socket = io('/' + data.guid);
                 socket
                     .on('connect', function() {
                         console.log('connected to server');
@@ -41,7 +41,9 @@ $(document).ready(function() {
                             map.addPolylines(destinationData);
                         }
 
+                        console.log('disconnecting from server');
                         socket.disconnect();
+
                         console.log('done');
                     });
             }
