@@ -8,6 +8,7 @@ const router = express.Router();
 const Executor = require('../models/executor');
 const Ip2Location = require('../models/ip2location');
 const Terminator = require('../models/terminator');
+const cache = require('../models/cache');
 
 router.post('/', (req, res, next) => {
     console.log(`trace domain name ${req.body.domainName} received`);
@@ -17,6 +18,14 @@ router.post('/', (req, res, next) => {
 
         res.sendStatus(HttpStatus.BAD_REQUEST);
         return;
+    }
+
+    if (req.session.guid) {
+        const previousPid = cache.get(req.session.guid);
+        if (previousPid) {
+            Terminator.terminate(previousPid);
+            cache.delete(req.session.guid);
+        }
     }
 
     const guid = uuid.v4();
@@ -32,6 +41,7 @@ router.post('/', (req, res, next) => {
         executor
             .on('pid', (pid) => {
                 pidHolder = pid;
+                cache.set(guid, pid);
             })
             .on('destination', (destination) => {
                 socketNamespace.emit('destination', destination);
@@ -40,7 +50,12 @@ router.post('/', (req, res, next) => {
                 socketNamespace.emit('data', data);
             })
             .on('done', (code) => {
-                socketNamespace.emit('done');
+                if (code) {
+                    socketNamespace.emit('terminated');
+                }
+                else {
+                    socketNamespace.emit('done');
+                }
             });
 
         socket.on('disconnect', () => {
@@ -48,6 +63,7 @@ router.post('/', (req, res, next) => {
 
             if (pidHolder) {
                 Terminator.terminate(pidHolder);
+                cache.delete(guid);
             }
         });
 

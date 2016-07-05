@@ -35,7 +35,7 @@ $(document).ready(function() {
                             map.addPolylines(data);
                         }
                     })
-                    .on('done', function () {
+                    .on('done', function() {
                         if (hopData[hopData.length - 1].ip !== destinationData.ip) {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
@@ -45,6 +45,12 @@ $(document).ready(function() {
                         socket.disconnect();
 
                         console.log('done');
+                    })
+                    .on('terminated', function() {
+                        console.log('disconnecting from server');
+                        socket.disconnect();
+
+                        console.log('terminated');
                     });
             }
         });
