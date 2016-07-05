@@ -42,7 +42,6 @@ class Executor extends events.EventEmitter {
             })
             .on('destination', (destination) => {
                 const destinationGeoInfo = this.dbConnector.query(destination);
-                console.log(`executor: destination geo info ${JSON.stringify(destinationGeoInfo)}`);
 
                 let result = null;
                 if (destinationGeoInfo !== null) {
@@ -68,6 +67,7 @@ class Executor extends events.EventEmitter {
                     };
                 }
 
+                console.log(`executor: destination geo info ${JSON.stringify(result)}`);
                 this.emit('destination', result);
             })
             .on('hop', (hop) => {
@@ -76,7 +76,6 @@ class Executor extends events.EventEmitter {
                 }
 
                 const geoInfo = this.dbConnector.query(hop.ip);
-                console.log(`executor: geo info ${JSON.stringify(geoInfo)}`);
 
                 let result = null;
                 if (geoInfo !== null) {
@@ -102,6 +101,7 @@ class Executor extends events.EventEmitter {
                     };
                 }
 
+                console.log(`executor: geo info ${JSON.stringify(result)}`);
                 this.emit('data', result);
             })
             .on('done', (code) => {
