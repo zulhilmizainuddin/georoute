@@ -17,10 +17,14 @@ $(document).ready(function() {
                 socket
                     .on('connect', function() {
                         console.log('connected to server');
+
+                        map.startProgressIndicator();
                     })
                     .on('connect_error', function() {
                         console.log('connection error, disconnecting socket');
                         socket.disconnect();
+
+                        map.stopProgressIndicator();
                     })
                     .on('destination', function(destination) {
                         destinationData = destination;
@@ -44,11 +48,15 @@ $(document).ready(function() {
                         console.log('disconnecting from server');
                         socket.disconnect();
 
+                        map.stopProgressIndicator();
+
                         console.log('done');
                     })
                     .on('terminated', function() {
                         console.log('disconnecting from server');
                         socket.disconnect();
+
+                        map.stopProgressIndicator();
 
                         console.log('terminated');
                     });

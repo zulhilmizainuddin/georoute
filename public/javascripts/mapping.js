@@ -60,3 +60,11 @@ Mapping.prototype.clearData = function() {
     this.polylinePoints = null;
     this.polylines = null;
 };
+
+Mapping.prototype.startProgressIndicator = function() {
+    this.map.spin(true);
+};
+
+Mapping.prototype.stopProgressIndicator = function() {
+    this.map.spin(false);
+};
