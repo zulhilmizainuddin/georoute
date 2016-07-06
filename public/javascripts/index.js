@@ -63,4 +63,10 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#domainName').keypress(function(e) {
+        if (e.keyCode === 13) {
+            $('#submit').click();
+        }
+    });
 });
