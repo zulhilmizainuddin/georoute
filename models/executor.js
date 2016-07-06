@@ -83,10 +83,10 @@ class Executor extends events.EventEmitter {
                         hop: hop.hop,
                         ip: hop.ip,
                         rtt1: hop.rtt1,
-                        country: geoInfo.country_long,
-                        city: geoInfo.city,
-                        latitude: geoInfo.latitude,
-                        longitude: geoInfo.longitude
+                        country: geoInfo.country_long !== '-' ? geoInfo.country_long : '*',
+                        city: geoInfo.city !== '-' ? geoInfo.city : '*',
+                        latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
+                        longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
                     };
                 }
                 else {
