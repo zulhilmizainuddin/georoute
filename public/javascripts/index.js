@@ -2,11 +2,13 @@ $(document).ready(function() {
     var map = new Mapping();
     map.initialize();
 
+    sidebar.initialize(map.getMap());
+
     $('#submit').click(function() {
         map.clearData();
         map.removeLayers();
 
-        sidebar.initialize();
+        sidebar.clearTable();
 
         var domainName = $('#domainName').val();
 
@@ -15,14 +17,13 @@ $(document).ready(function() {
                 var destinationData = null;
                 var hopData = [];
 
-                var scrollCounter = 0;
-
                 var socket = io('/' + data.guid);
                 socket
                     .on('connect', function() {
                         console.log('connected to server');
 
                         map.startProgressIndicator();
+                        sidebar.open();
                     })
                     .on('connect_error', function() {
                         console.log('connection error, disconnecting socket');

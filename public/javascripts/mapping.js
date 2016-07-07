@@ -13,8 +13,10 @@ Mapping.prototype.initialize = function() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 18
     }).addTo(this.map);
+};
 
-    var sidebar = L.control.sidebar('sidebar', {position: 'right'}).addTo(this.map);
+Mapping.prototype.getMap = function() {
+    return this.map;
 };
 
 Mapping.prototype.removeLayers = function() {
