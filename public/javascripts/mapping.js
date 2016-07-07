@@ -27,22 +27,8 @@ Mapping.prototype.removeLayers = function() {
 
 Mapping.prototype.addMarker = function(data) {
     var marker = L.marker([data.latitude, data.longitude], {icon: L.AwesomeMarkers.icon({text: data.hop})}).addTo(this.map);
-    var popup = this.popupTemplate(data);
 
-    marker.bindPopup(popup).openPopup();
-};
-
-Mapping.prototype.popupTemplate = function(data) {
-    var popup =
-        '<b>Hop ' + data.hop + '</b><br>' +
-        'IP: ' + data.ip + '<br>' +
-        'RTT: ' + data.rtt1 + '<br>' +
-        'City: ' + data.city + '<br>' +
-        'Country: ' + data.country + '<br>' +
-        'Latitude: ' + data.latitude + '<br>' +
-        'Longitude: ' + data.longitude + '<br>';
-
-    return popup;
+    marker.bindPopup(template.hopTemplate(data)).openPopup();
 };
 
 Mapping.prototype.addPolylines = function(data) {
@@ -69,10 +55,4 @@ Mapping.prototype.startProgressIndicator = function() {
 
 Mapping.prototype.stopProgressIndicator = function() {
     this.map.spin(false);
-};
-
-Mapping.prototype.tableTemplate = function(data) {
-    var template = '<tr><td>' + this.popupTemplate(data) + '</td></tr>';
-
-    return template;
 };

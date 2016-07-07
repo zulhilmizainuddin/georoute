@@ -6,7 +6,7 @@ $(document).ready(function() {
         map.clearData();
         map.removeLayers();
 
-        $('#hopsTable').empty();
+        sidebar.initialize();
 
         var domainName = $('#domainName').val();
 
@@ -43,16 +43,14 @@ $(document).ready(function() {
                             map.addPolylines(data);
                         }
 
-                        $('#hopsTable').append(map.tableTemplate(data));
-                        $('.sidebar-content').animate({scrollTop: scrollCounter += 500}, 1000);
+                        sidebar.appendTable(data);
                     })
                     .on('done', function() {
                         if (hopData[hopData.length - 1].ip !== destinationData.ip) {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
 
-                            $('#hopsTable').append(map.tableTemplate(data));
-                            $('.sidebar-content').animate({scrollTop: scrollCounter += 500}, 1000);
+                            sidebar.appendTable(data);
                         }
 
                         console.log('disconnecting from server');
