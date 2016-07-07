@@ -50,7 +50,7 @@ $(document).ready(function() {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
 
-                            sidebar.appendTable(data);
+                            sidebar.appendTable(destinationData);
                         }
 
                         console.log('disconnecting from server');
