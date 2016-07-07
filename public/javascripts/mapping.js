@@ -1,7 +1,5 @@
 var Mapping = function() {
-    this.hopData = [];
-    this.polylinePoints = null;
-    this.polylines = null;
+    this.polylinePoints = [];
 };
 
 Mapping.prototype.initialize = function() {
@@ -45,24 +43,21 @@ Mapping.prototype.popupTemplate = function(data) {
 };
 
 Mapping.prototype.addPolylines = function(data) {
-    this.hopData.push(data);
+    this.polylinePoints.push(new L.LatLng(data.latitude, data.longitude));
 
-    this.polylinePoints = this.hopData.map(function(data) {
-        return new L.LatLng(data.latitude, data.longitude);
-    });
+    if (this.polylinePoints.length > 1) {
+        var locationA = this.polylinePoints[this.polylinePoints.length - 1];
+        var locationB = this.polylinePoints[this.polylinePoints.length - 2];
 
-    if (this.polylines !== null) this.map.removeLayer(this.polylines);
+        new L.Polyline([locationA, locationB]).addTo(this.map);
+    }
 
-    this.polylines = new L.Polyline(this.polylinePoints);
-
-    this.map.addLayer(this.polylines);
-    this.map.fitBounds(this.polylines.getBounds());
+    var polylines = new L.Polyline(this.polylinePoints);
+    this.map.fitBounds(polylines.getBounds());
 };
 
 Mapping.prototype.clearData = function() {
-    this.hopData = [];
-    this.polylinePoints = null;
-    this.polylines = null;
+    this.polylinePoints = [];
 };
 
 Mapping.prototype.startProgressIndicator = function() {
