@@ -6,12 +6,16 @@ $(document).ready(function() {
         map.clearData();
         map.removeLayers();
 
+        $('#hopsTable').empty();
+
         var domainName = $('#domainName').val();
 
         $.post('/trace', {domainName: domainName}, function(data, status) {
             if (status === 'success') {
                 var destinationData = null;
                 var hopData = [];
+
+                var scrollCounter = 0;
 
                 var socket = io('/' + data.guid);
                 socket
@@ -38,11 +42,17 @@ $(document).ready(function() {
                             map.addMarker(data);
                             map.addPolylines(data);
                         }
+
+                        $('#hopsTable').append(map.tableTemplate(data));
+                        $('.sidebar-content').animate({scrollTop: scrollCounter += 500}, 1000);
                     })
                     .on('done', function() {
                         if (hopData[hopData.length - 1].ip !== destinationData.ip) {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
+
+                            $('#hopsTable').append(map.tableTemplate(data));
+                            $('.sidebar-content').animate({scrollTop: scrollCounter += 500}, 1000);
                         }
 
                         console.log('disconnecting from server');

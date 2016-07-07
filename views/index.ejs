@@ -5,20 +5,39 @@
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel="stylesheet" href="leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="leaflet.awesome-markers/leaflet.awesome-markers.css" />
+  <link rel="stylesheet" href="sidebar-v2/css/leaflet-sidebar.min.css" />
   <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" />
 </head>
 <body>
 <div class="header">
   <div id="input" class="col-sm-5 col-lg-3">
     <div class="input-group">
-      <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="Domain name or ip address" autofocus="autofocus">
+      <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="domain name or ip address" autofocus="autofocus">
       <span class="input-group-btn">
-        <button id="submit" class="btn btn-default btn-sm" type="submit">Trace</button>
+        <button id="submit" class="btn btn-default btn-sm" type="submit">trace</button>
       </span>
     </div>
   </div>
 </div>
-<div id="map" class="map leaflet-container leaflet-fade-anim leaflet-grab"></div>
+<div class="maincontainer">
+  <div id="map" class="map leaflet-container leaflet-fade-anim leaflet-grab"></div>
+  <div id="sidebar" class="sidebar collapsed">
+    <div class="sidebar-tabs">
+      <ul role="tablist">
+        <li><a href="#hopsPane" role="tab"><i class="glyphicon glyphicon-menu-hamburger"></i></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-pane" id="hopsPane">
+        <h1 class="sidebar-header">
+          hops
+          <span class="sidebar-close"><i class="glyphicon glyphicon-menu-right"></i></span>
+        </h1>
+        <table id="hopsTable" class="table table-striped table-hover"></table>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="footer">
   <ul id="footerinfo">
     <li>© <%= year %> <%= title %></li>
@@ -26,6 +45,7 @@
 </div>
 <script src="leaflet/dist/leaflet.js"></script>
 <script src="leaflet.awesome-markers/leaflet.awesome-markers.js"></script>
+<script src="sidebar-v2/js/leaflet-sidebar.min.js"></script>
 <script src="leaflet-spin/leaflet.spin.js"></script>
 <script src="spin.js/spin.min.js"></script>
 <script src="jquery/dist/jquery.min.js"></script>

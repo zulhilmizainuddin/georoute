@@ -6,13 +6,15 @@ Mapping.prototype.initialize = function() {
     this.map = L.map('map', {
         center: [51.505, -0.09],
         zoom: 13,
-        minZoom: 2
+        minZoom: 3
     });
 
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 18
     }).addTo(this.map);
+
+    var sidebar = L.control.sidebar('sidebar', {position: 'right'}).addTo(this.map);
 };
 
 Mapping.prototype.removeLayers = function() {
@@ -33,6 +35,7 @@ Mapping.prototype.addMarker = function(data) {
 Mapping.prototype.popupTemplate = function(data) {
     var popup =
         '<b>Hop ' + data.hop + '</b><br>' +
+        'IP: ' + data.ip + '<br>' +
         'RTT: ' + data.rtt1 + '<br>' +
         'City: ' + data.city + '<br>' +
         'Country: ' + data.country + '<br>' +
@@ -66,4 +69,10 @@ Mapping.prototype.startProgressIndicator = function() {
 
 Mapping.prototype.stopProgressIndicator = function() {
     this.map.spin(false);
+};
+
+Mapping.prototype.tableTemplate = function(data) {
+    var template = '<tr><td>' + this.popupTemplate(data) + '</td></tr>';
+
+    return template;
 };

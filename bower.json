@@ -24,6 +24,7 @@
     "leaflet": "1",
     "bootstrap": "^3.3.6",
     "socket.io": "^1.4.8",
-    "leaflet-spin": "makinacorpus/Leaflet.Spin#^0.1.1"
+    "leaflet-spin": "makinacorpus/Leaflet.Spin#^0.1.1",
+    "sidebar-v2": "^0.3.0"
   }
 }
