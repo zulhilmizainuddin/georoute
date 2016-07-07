@@ -26,7 +26,7 @@ Mapping.prototype.removeLayers = function() {
 };
 
 Mapping.prototype.addMarker = function(data) {
-    var marker = L.marker([data.latitude, data.longitude]).addTo(this.map);
+    var marker = L.marker([data.latitude, data.longitude], {icon: L.AwesomeMarkers.icon({text: data.hop})}).addTo(this.map);
     var popup = this.popupTemplate(data);
 
     marker.bindPopup(popup).openPopup();
