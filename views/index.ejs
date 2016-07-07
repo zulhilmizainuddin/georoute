@@ -12,9 +12,9 @@
 <div class="header">
   <div id="input" class="col-sm-5 col-lg-3">
     <div class="input-group">
-      <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="domain name or ip address" autofocus="autofocus">
+      <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="<%= domainInputPlaceholder %>" autofocus="autofocus">
       <span class="input-group-btn">
-        <button id="submit" class="btn btn-default btn-sm" type="submit">trace</button>
+        <button id="submit" class="btn btn-default btn-sm" type="submit"><%= traceButtonText %></button>
       </span>
     </div>
   </div>
@@ -30,7 +30,7 @@
     <div class="sidebar-content">
       <div class="sidebar-pane" id="hopsPane">
         <h1 class="sidebar-header">
-          hops
+          <%= hopsTableHeader %>
           <span class="sidebar-close"><i class="glyphicon glyphicon-menu-right"></i></span>
         </h1>
         <table id="hopsTable" class="table table-striped table-hover"></table>
@@ -41,6 +41,7 @@
 <div class="footer">
   <ul id="footerinfo">
     <li>© <%= year %> <%= title %></li>
+    <li id="disclaimer"><%- disclaimer %></li>
   </ul>
 </div>
 <script src="leaflet/dist/leaflet.js"></script>

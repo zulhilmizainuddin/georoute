@@ -56,6 +56,11 @@ body {
   font-size: 12px;
 }
 
-#footerinfo {
-  list-style: none;
+ul#footerinfo li {
+  display: inline;
+}
+
+ul#footerinfo li#disclaimer {
+  float: right;
+  margin-right: 10px;
 }
