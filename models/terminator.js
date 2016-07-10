@@ -1,14 +1,16 @@
 const process = require('process');
 
+const Logger = require('../util/logger');
+
 class Terminator {
     static terminate(pid) {
-        console.log(`terminator killing process ${pid}`);
+        Logger.info(`terminator killing process ${pid}`);
 
         try {
             process.kill(pid);
         }
         catch (err) {
-            console.log(err);
+            Logger.info(err);
         }
     }
 }

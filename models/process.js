@@ -2,6 +2,8 @@ const spawn = require('child_process').spawn;
 const events = require('events');
 const readline = require('readline');
 
+const Logger = require('../util/logger');
+
 class Process extends events.EventEmitter {
     constructor(command, args) {
         super();
@@ -15,7 +17,7 @@ class Process extends events.EventEmitter {
         const process = spawn(this.command, this.args);
         process.on('close', (code) => {
             this.emit('done', code);
-            console.log(`process exited with code ${code}`);
+            Logger.info(`process exited with code ${code}`);
         });
 
         this.emit('pid', process.pid);
@@ -31,7 +33,7 @@ class Process extends events.EventEmitter {
                         const destination = this.parseDestination(line);
                         if (destination !== null) {
                             this.emit('destination', destination);
-                            console.log(`process destination: ${destination}`);
+                            Logger.info(`process destination: ${destination}`);
 
                             isDestinationCaptured = true;
                         }
@@ -40,7 +42,7 @@ class Process extends events.EventEmitter {
                     const hop = this.parseHop(line);
                     if (hop !== null) {
                         this.emit('hop', hop);
-                        console.log(`process hop: ${JSON.stringify(hop)}`);
+                        Logger.info(`process hop: ${JSON.stringify(hop)}`);
                     }
                 });
 
@@ -49,7 +51,7 @@ class Process extends events.EventEmitter {
                     terminal: false
                 })
                 .on('line', (line) => {
-                    console.log(`process error: ${line}`);
+                    Logger.info(`process error: ${line}`);
                 });
         }
     }

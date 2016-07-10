@@ -5,6 +5,7 @@ const events = require('events');
 const PublicIp = require('./public-ip');
 const Tracert = require('./tracert');
 const Traceroute = require('./traceroute');
+const Logger = require('../util/logger');
 
 class Executor extends events.EventEmitter {
     constructor(dbConnector) {
@@ -67,7 +68,7 @@ class Executor extends events.EventEmitter {
                     };
                 }
 
-                console.log(`executor: destination geo info ${JSON.stringify(result)}`);
+                Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
                 this.emit('destination', result);
             })
             .on('hop', (hop) => {
@@ -101,7 +102,7 @@ class Executor extends events.EventEmitter {
                     };
                 }
 
-                console.log(`executor: geo info ${JSON.stringify(result)}`);
+                Logger.info(`executor: geo info ${JSON.stringify(result)}`);
                 this.emit('data', result);
             })
             .on('done', (code) => {

@@ -8,23 +8,24 @@ const router = express.Router();
 const Executor = require('../models/executor');
 const Ip2Location = require('../models/ip2location');
 const Terminator = require('../models/terminator');
-const cache = require('../models/cache');
+const Cache = require('../models/cache');
+const Logger = require('../util/logger');
 
 router.post('/', (req, res, next) => {
     console.log(`trace domain name ${req.body.domainName} received`);
 
     if (!validator.isFQDN(req.body.domainName) && !validator.isIP(req.body.domainName)) {
-        console.log(`trace not a valid domain name or ip received, returning http ${HttpStatus.BAD_REQUEST}`);
+        Logger.info(`trace not a valid domain name or ip received, returning http ${HttpStatus.BAD_REQUEST}`);
 
         res.sendStatus(HttpStatus.BAD_REQUEST);
         return;
     }
 
     if (req.session.guid) {
-        const previousPid = cache.get(req.session.guid);
+        const previousPid = Cache.get(req.session.guid);
         if (previousPid) {
             Terminator.terminate(previousPid);
-            cache.delete(req.session.guid);
+            Cache.delete(req.session.guid);
         }
     }
 
@@ -34,14 +35,14 @@ router.post('/', (req, res, next) => {
 
     const socketNamespace = req.app.io.of('/' + guid);
     socketNamespace.on('connection', (socket) => {
-        console.log(`a user from ${socket.conn.remoteAddress} connected`);
+        Logger.info(`a user from ${socket.conn.remoteAddress} connected`);
 
         let pidHolder = null;
         const executor = new Executor(new Ip2Location());
         executor
             .on('pid', (pid) => {
                 pidHolder = pid;
-                cache.set(guid, pid);
+                Cache.set(guid, pid);
             })
             .on('destination', (destination) => {
                 socketNamespace.emit('destination', destination);
@@ -59,11 +60,11 @@ router.post('/', (req, res, next) => {
             });
 
         socket.on('disconnect', () => {
-            console.log(`a user from ${socket.conn.remoteAddress} disconnected`);
+            Logger.info(`a user from ${socket.conn.remoteAddress} disconnected`);
 
             if (pidHolder) {
                 Terminator.terminate(pidHolder);
-                cache.delete(guid);
+                Cache.delete(guid);
             }
         });
 

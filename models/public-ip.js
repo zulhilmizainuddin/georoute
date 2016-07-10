@@ -2,6 +2,8 @@ const dgram = require('dgram');
 const dns = require('dns-socket');
 const events = require('events');
 
+const Logger = require('../util/logger');
+
 class PublicIp extends events.EventEmitter {
     queryOwnPublicIp() {
         this.getIp('ipv4');
@@ -42,7 +44,7 @@ class PublicIp extends events.EventEmitter {
                 ip = res.answers[0] && res.answers[0].data;
             }
 
-            console.log(`public ip ${version}: ${ip}`);
+            Logger.info(`public ip ${version}: ${ip}`);
 
             this.emit(version, ip);
         });
