@@ -25,7 +25,7 @@ body {
 }
 
 .footer {
-  height: 20px;
+  height: 15px;
   background-color: rgb(247, 247, 249);
 }
 
@@ -35,7 +35,7 @@ body {
 }
 
 .maincontainer {
-  height: calc(100% - (40px + 20px));
+  height: calc(100% - (40px + 15px));
 }
 
 .map {
@@ -56,11 +56,16 @@ body {
   font-size: 12px;
 }
 
-ul#footerinfo li {
-  display: inline;
+div#footerinfo span {
+  font-size: 12px;
 }
 
-ul#footerinfo li#disclaimer {
+div#footerinfo #copyright {
+  float: left;
+  margin-left: 10px;
+}
+
+div#footerinfo #disclaimer {
   float: right;
   margin-right: 10px;
 }
