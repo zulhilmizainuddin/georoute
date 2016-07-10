@@ -2,6 +2,7 @@ $(document).ready(function() {
     var map = new Mapping();
     map.initialize();
 
+    var sidebar = new Sidebar();
     sidebar.initialize(map.getMap());
 
     $('#submit').click(function() {
