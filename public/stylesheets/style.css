@@ -56,16 +56,16 @@ body {
   font-size: 12px;
 }
 
-div#footerinfo span {
+#footerinfo {
   font-size: 12px;
 }
 
-div#footerinfo #copyright {
+#copyright {
   float: left;
   margin-left: 10px;
 }
 
-div#footerinfo #disclaimer {
+#disclaimer {
   float: right;
   margin-right: 10px;
 }
