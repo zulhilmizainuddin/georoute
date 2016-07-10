@@ -4,6 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 
 const config = require('./config');
 const indexRoutes = require('./routes/index');
@@ -18,6 +19,7 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+app.use(compression());
 app.use(session({
   secret: config.sessionSecret,
   resave: false,
