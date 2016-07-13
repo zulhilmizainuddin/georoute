@@ -6,12 +6,39 @@ $(document).ready(function() {
     sidebar.initialize(map.getMap());
 
     $('#submit').click(function() {
+
+        var domainName = $('#domainName').val();
+
+        if (!validator.isFQDN(domainName + '') && !validator.isIP(domainName + '')) {
+            console.log('invalid input: ' + domainName);
+
+            toastr.options = {
+              "closeButton": true,
+              "debug": false,
+              "newestOnTop": false,
+              "progressBar": true,
+              "positionClass": "toast-top-right",
+              "preventDuplicates": true,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "2000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            };
+
+            toastr.error("Input a domain name or ip address");
+
+            return;
+        }
+
         map.clearData();
         map.removeLayers();
 
         sidebar.clearTable();
-
-        var domainName = $('#domainName').val();
 
         $.post('/trace', {domainName: domainName}, function(data, status) {
             if (status === 'success') {
