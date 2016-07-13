@@ -14,7 +14,7 @@ const Logger = require('../util/logger');
 router.post('/', (req, res, next) => {
     console.log(`trace domain name ${req.body.domainName} received`);
 
-    if (!validator.isFQDN(req.body.domainName) && !validator.isIP(req.body.domainName)) {
+    if (!validator.isFQDN(req.body.domainName + '') && !validator.isIP(req.body.domainName + '')) {
         Logger.info(`trace not a valid domain name or ip received, returning http ${HttpStatus.BAD_REQUEST}`);
 
         res.sendStatus(HttpStatus.BAD_REQUEST);
