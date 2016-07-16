@@ -30,7 +30,10 @@ Sidebar.prototype.appendTable = function(data) {
         var index = markers.findIndex(function(value) {
             return html.includes(value._popup._content);
         });
-        markers[index].openPopup();
+
+        if (index) {
+            markers[index].openPopup();
+        }
     });
 };
 
