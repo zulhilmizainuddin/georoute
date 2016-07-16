@@ -26,7 +26,11 @@ Sidebar.prototype.appendTable = function(data) {
     var hopsTableRow = $('#hopsTable tr');
     hopsTableRow.unbind('click');
     hopsTableRow.click(function() {
-        markers[$(this).index()].openPopup();
+        var html = $(this).html();
+        var index = markers.findIndex(function(value) {
+            return html.includes(value._popup._content);
+        });
+        markers[index].openPopup();
     });
 };
 
