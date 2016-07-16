@@ -1,8 +1,9 @@
 const Process = require('./process');
+const config = require('../config');
 
 class Traceroute extends Process {
     constructor() {
-        super('traceroute', ['-q', 1, '-z', 1, '-n']);
+        super('traceroute', ['-q', 1, '-z', config.tracerouteDelay, '-n']);
     }
 
     parseDestination(data) {
