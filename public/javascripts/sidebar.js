@@ -31,7 +31,7 @@ Sidebar.prototype.appendTable = function(data) {
             return html.includes(value._popup._content);
         });
 
-        if (index) {
+        if (index !== -1) {
             markers[index].openPopup();
         }
     });
