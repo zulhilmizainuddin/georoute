@@ -2,7 +2,7 @@ $(document).ready(function() {
     var map = new Mapping();
     map.initialize();
 
-    var sidebar = new Sidebar();
+    var sidebar = new Sidebar(map.getMarkers());
     sidebar.initialize(map.getMap());
 
     $('#submit').click(function() {

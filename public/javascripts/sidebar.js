@@ -1,6 +1,8 @@
-var Sidebar = function() {
+var Sidebar = function(markers) {
     this.scrollCounter = 0;
     this.sidebar = null;
+
+    this.markers = markers;
 };
 
 Sidebar.prototype.initialize = function(map) {
@@ -18,6 +20,14 @@ Sidebar.prototype.tableTemplate = function(data) {
 Sidebar.prototype.appendTable = function(data) {
     $('#hopsTable').append(this.tableTemplate(data));
     $('.sidebar-content').animate({scrollTop: this.scrollCounter += 500}, 1000);
+
+    var markers = this.markers;
+
+    var hopsTableRow = $('#hopsTable tr');
+    hopsTableRow.unbind('click');
+    hopsTableRow.click(function() {
+        markers[$(this).index()].openPopup();
+    });
 };
 
 Sidebar.prototype.clearTable = function() {

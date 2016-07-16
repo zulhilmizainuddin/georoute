@@ -1,4 +1,5 @@
 var Mapping = function() {
+    this.markers = [];
     this.polylinePoints = [];
 };
 
@@ -31,6 +32,12 @@ Mapping.prototype.addMarker = function(data) {
     var marker = L.marker([data.latitude, data.longitude], {icon: L.AwesomeMarkers.icon({text: data.hop})}).addTo(this.map);
 
     marker.bindPopup(template.hopTemplate(data)).openPopup();
+
+    this.markers.push(marker);
+};
+
+Mapping.prototype.getMarkers = function() {
+    return this.markers;
 };
 
 Mapping.prototype.addPolylines = function(data) {
@@ -48,7 +55,8 @@ Mapping.prototype.addPolylines = function(data) {
 };
 
 Mapping.prototype.clearData = function() {
-    this.polylinePoints = [];
+    this.markers.length = 0;
+    this.polylinePoints.length = 0;
 };
 
 Mapping.prototype.startProgressIndicator = function() {
