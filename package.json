@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run bundle && node ./bin/www",
-    "bundle": "uglifyjs public/javascripts/template.js public/javascripts/mapping.js public/javascripts/sidebar.js public/javascripts/index.js -o public/javascripts/bundle.min.js -c -m"
+    "prestart": "uglifyjs public/javascripts/template.js public/javascripts/mapping.js public/javascripts/sidebar.js public/javascripts/index.js -o public/javascripts/bundle.min.js -c -m",
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
