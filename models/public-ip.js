@@ -30,7 +30,8 @@ class PublicIp extends events.EventEmitter {
 
         const data = type[version];
         const socket = dns({
-            socket: dgram.createSocket(version === 'ipv6' ? 'udp6' : 'udp4')
+            socket: dgram.createSocket(version === 'ipv6' ? 'udp6' : 'udp4'),
+            retries: 1
         });
 
         socket.query.bind(socket);
