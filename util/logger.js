@@ -3,15 +3,22 @@ const winston = require('winston');
 const config = require('../config');
 
 class Logger {
-    static info(text) {
+    constructor() {
+        winston.remove(winston.transports.Console);
+        winston.add(winston.transports.Console, {timestamp: true});
         winston.level = config.logLevel;
+    }
+
+    info(text) {
         winston.info(text);
     }
 
-    static error(text) {
-        winston.level = config.logLevel;
+    error(text) {
         winston.error(text);
     }
 }
 
-module.exports = Logger;
+const logger = new Logger();
+Object.freeze(logger);
+
+module.exports = logger;
