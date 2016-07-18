@@ -28,4 +28,4 @@ Browse to localhost:3000
 
 ## Screenshot
 
-<img src="https://github.com/zulhilmizainuddin/georoute/blob/master/screenshots/georoute_screenshot.png" width="80%" height="auto">
+<img src="https://github.com/zulhilmizainuddin/georoute/blob/master/screenshots/georoute_screenshot.png" width="100%" height="auto">
