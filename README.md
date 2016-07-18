@@ -20,6 +20,8 @@ Get server side dependencies:
 
     npm install
     
+Download IP2LOCATION-LITE-DB5.BIN and IP2LOCATION-LITE-DB5.IPV6.BIN from https://lite.ip2location.com/database-ip-country-region-city-latitude-longitude and place into the databases directory.
+    
 Start server:
 
     npm start
