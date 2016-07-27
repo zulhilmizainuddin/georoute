@@ -37,11 +37,13 @@ class Executor extends events.EventEmitter {
     trace(domainName) {
         const tracer = (os.platform() === 'win32') ? new Tracert() : new Traceroute();
 
+        let destinationIp;
         tracer
             .on('pid', (pid) => {
                 this.emit('pid', pid);
             })
             .on('destination', (destination) => {
+                destinationIp = destination;
                 const destinationGeoInfo = this.dbConnector.query(destination);
 
                 let result = null;
@@ -73,12 +75,7 @@ class Executor extends events.EventEmitter {
             })
             .on('hop', (hop) => {
                 if (hop.hop === 1) {
-                    if (hop.ip !== '*') {
-                        hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
-                    }
-                    else {
-                        hop.ip = this.publicIpv4 ? this.publicIpv4 : this.publicIpv6;
-                    }
+                    hop.ip = net.isIPv4(destinationIp) ? this.publicIpv4 : this.publicIpv6;
                 }
 
                 const geoInfo = this.dbConnector.query(hop.ip);
