@@ -76,6 +76,9 @@ class Executor extends events.EventEmitter {
                     if (hop.ip !== '*') {
                         hop.ip = net.isIPv4(hop.ip) ? this.publicIpv4 : this.publicIpv6;
                     }
+                    else {
+                        hop.ip = this.publicIpv4 ? this.publicIpv4 : this.publicIpv6;
+                    }
                 }
 
                 const geoInfo = this.dbConnector.query(hop.ip);
