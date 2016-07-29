@@ -5,6 +5,9 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   res.render('index', {
     title: 'georoute',
+    description: 'traceroute on a map',
+    keywords: 'traceroute, tracert, geoip, geolocation, map',
+    author: 'Zulhilmi Mohamed Zainuddin',
     domainInputPlaceholder: 'domain name or ip address',
     traceButtonText: 'trace',
     hopsTableHeader: 'hops',
