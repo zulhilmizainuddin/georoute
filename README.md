@@ -4,7 +4,7 @@ Traceroute on a map using Node.js, Express, socket.io and Leaflet.
 
 Supports Linux and Windows.
 
-http://www.georoute.tech
+http://georoute.tech
 
 ## Getting Started
 
