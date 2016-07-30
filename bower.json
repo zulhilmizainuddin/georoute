@@ -27,7 +27,8 @@
     "leaflet-spin": "makinacorpus/Leaflet.Spin#^0.1.1",
     "sidebar-v2": "^0.3.0",
     "validator-js": "^5.4.0",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "octicons": "^4.3.0"
   },
   "resolutions": {
     "leaflet": "1"

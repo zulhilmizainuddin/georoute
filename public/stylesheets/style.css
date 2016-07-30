@@ -34,6 +34,12 @@ body {
   margin-top: 5px;
 }
 
+#github {
+  color: white;
+  float: right;
+  margin-top: 10px;
+}
+
 .maincontainer {
   height: calc(100% - (40px + 15px));
 }
