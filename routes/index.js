@@ -8,6 +8,8 @@ router.get('/', (req, res, next) => {
     description: 'traceroute on a map',
     keywords: 'traceroute, tracert, geoip, geolocation, map',
     author: 'Zulhilmi Mohamed Zainuddin',
+    githubRepository: 'https://github.com/zulhilmizainuddin/georoute',
+    githubLinkText: 'View on GitHub',
     domainInputPlaceholder: 'domain name or ip address',
     traceButtonText: 'trace',
     hopsTableHeader: 'hops',
