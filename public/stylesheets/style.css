@@ -29,6 +29,13 @@ body {
   background-color: rgb(247, 247, 249);
 }
 
+#heading {
+  color: white;
+  font-size: 28px;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
 #input {
   float: right;
   margin-top: 5px;
