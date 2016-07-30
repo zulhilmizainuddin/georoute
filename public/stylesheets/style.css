@@ -60,7 +60,8 @@ body {
 #sidebar {
   height: calc(100% - (50px + 30px));
   max-width: 300px;
-  margin-top: 40px;
+  top: 50px;
+  right: 10px;
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
