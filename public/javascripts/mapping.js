@@ -7,7 +7,7 @@ Mapping.prototype.initialize = function() {
     this.map = L.map('map', {
         center: [51.505, -0.09],
         zoom: 13,
-        minZoom: 3
+        minZoom: 2
     });
 
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
