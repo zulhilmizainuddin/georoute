@@ -39,6 +39,8 @@ body {
 #input {
   float: right;
   margin-top: 5px;
+  width: 350px;
+  max-width: 50%;
 }
 
 #github {
