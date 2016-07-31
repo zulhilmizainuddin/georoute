@@ -23,12 +23,12 @@
     "jquery": "2",
     "leaflet": "1",
     "bootstrap": "^3.3.6",
-    "socket.io": "^1.4.8",
     "leaflet-spin": "makinacorpus/Leaflet.Spin#^0.1.1",
     "sidebar-v2": "^0.3.0",
     "validator-js": "^5.4.0",
     "toastr": "^2.1.2",
-    "octicons": "^4.3.0"
+    "octicons": "^4.3.0",
+    "socket.io-client": "^1.4.8"
   },
   "resolutions": {
     "leaflet": "1"
