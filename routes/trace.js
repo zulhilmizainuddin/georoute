@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const validator = require('validator');
 const uuid = require('node-uuid');

@@ -1,3 +1,5 @@
+'use strict';
+
 const Process = require('./process');
 const config = require('../config');
 

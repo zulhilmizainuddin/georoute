@@ -1,3 +1,5 @@
+'use strict';
+
 $(document).ready(function() {
     var map = new Mapping();
     map.initialize();

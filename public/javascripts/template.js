@@ -1,3 +1,5 @@
+'use strict';
+
 var template = {
     hopTemplate: function(data) {
         var template =

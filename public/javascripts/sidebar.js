@@ -1,3 +1,5 @@
+'use strict';
+
 var Sidebar = function(markers) {
     this.scrollCounter = 0;
     this.sidebar = null;

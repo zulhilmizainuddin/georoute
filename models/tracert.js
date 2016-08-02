@@ -1,3 +1,5 @@
+'use strict';
+
 const Process = require('./process');
 
 class Tracert extends Process {

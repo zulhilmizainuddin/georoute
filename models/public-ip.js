@@ -1,3 +1,5 @@
+'use strict';
+
 const dgram = require('dgram');
 const dns = require('dns-socket');
 const events = require('events');

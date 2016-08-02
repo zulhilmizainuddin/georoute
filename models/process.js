@@ -1,3 +1,5 @@
+'use strict';
+
 const spawn = require('child_process').spawn;
 const events = require('events');
 const readline = require('readline');

@@ -1,3 +1,5 @@
+'use strict';
+
 const ip2loc = require('ip2location-nodejs');
 const path = require('path');
 const net = require('net');

@@ -1,3 +1,5 @@
+'use strict';
+
 const NodeCache = require('node-cache');
 
 class Cache {

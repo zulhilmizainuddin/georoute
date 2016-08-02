@@ -1,3 +1,5 @@
+'use strict';
+
 var Mapping = function() {
     this.markers = [];
     this.polylinePoints = [];
