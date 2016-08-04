@@ -49,6 +49,10 @@ body {
   margin-top: 10px;
 }
 
+.glyphicon {
+  color: white
+}
+
 .maincontainer {
   height: calc(100% - (40px + 15px));
 }

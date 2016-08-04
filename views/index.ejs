@@ -17,6 +17,9 @@
 <body>
 <div class="header">
   <a id="heading" href="<%- homepage %>"><%= heading %></a>
+  <a href="#" title="<%= popoverHeader %>" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="<%= popoverContent %>">
+    <span class="glyphicon glyphicon-question-sign"></span>
+  </a>
   <div id="input" class="col-sm-4">
     <div class="input-group">
       <input id="domainName" name="domainName" type="text" class="form-control input-sm" placeholder="<%= domainInputPlaceholder %>" autofocus="autofocus">

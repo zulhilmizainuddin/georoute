@@ -12,6 +12,8 @@ router.get('/', (req, res, next) => {
     keywords: 'traceroute, tracert, geoip, geolocation, map',
     author: 'Zulhilmi Mohamed Zainuddin',
     homepage: 'http://georoute.tech',
+    popoverHeader: 'Traceroute on a map',
+    popoverContent: 'Visualizations of the routing of network packets to reach its destination on a map',
     githubRepository: 'https://github.com/zulhilmizainuddin/georoute',
     githubLinkText: 'View on GitHub',
     domainInputPlaceholder: 'Domain name or ip address',

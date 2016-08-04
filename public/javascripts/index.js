@@ -103,6 +103,8 @@ $(document).ready(function() {
         });
     });
 
+    $('[data-toggle="popover"]').popover();
+
     $('#domainName').keypress(function(e) {
         if (e.keyCode === 13) {
             $('#submit').click();
