@@ -52,12 +52,12 @@ router.post('/', (req, res, next) => {
             .on('data', (data) => {
                 socketNamespace.emit('data', data);
             })
-            .on('done', (code) => {
+            .on('close', (code) => {
                 if (code) {
                     socketNamespace.emit('terminated');
                 }
                 else {
-                    socketNamespace.emit('done');
+                    socketNamespace.emit('close');
                 }
             });
 

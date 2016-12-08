@@ -76,7 +76,7 @@ $(document).ready(function() {
 
                         sidebar.appendTable(data);
                     })
-                    .on('done', function() {
+                    .on('close', function() {
                         if (hopData[hopData.length - 1].ip !== destinationData.ip) {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
@@ -89,7 +89,7 @@ $(document).ready(function() {
 
                         map.stopProgressIndicator();
 
-                        console.log('done');
+                        console.log('close');
                     })
                     .on('terminated', function() {
                         console.log('disconnecting from server');

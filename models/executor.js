@@ -107,8 +107,8 @@ class Executor extends events.EventEmitter {
                 Logger.info(`executor: geo info ${JSON.stringify(result)}`);
                 this.emit('data', result);
             })
-            .on('done', (code) => {
-                this.emit('done', code);
+            .on('close', (code) => {
+                this.emit('close', code);
             });
 
         tracer.trace(domainName);
