@@ -31,6 +31,7 @@
     "morgan": "~1.6.1",
     "node-cache": "^3.2.1",
     "node-uuid": "^1.4.7",
+    "nodejs-publicip": "^2.0.0",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.4.8",
     "uglify-js": "^2.7.0",

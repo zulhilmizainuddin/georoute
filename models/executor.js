@@ -3,8 +3,8 @@
 const os = require('os');
 const net = require('net');
 const events = require('events');
+const PublicIp = require('nodejs-publicip');
 
-const PublicIp = require('./public-ip');
 const Tracert = require('./tracert');
 const Traceroute = require('./traceroute');
 const Logger = require('../util/logger');
@@ -21,19 +21,17 @@ class Executor extends events.EventEmitter {
 
     start(domainName) {
         const publicIp = new PublicIp();
-        publicIp.queryOwnPublicIp();
-        publicIp.on('ipv4', (ip) => {
-                    this.publicIpv4 = ip;
-                    if (this.publicIpv4 !== null && this.publicIpv6 !== null) {
-                        this.trace(domainName);
-                    }
-                })
-                .on('ipv6', (ip) => {
-                    this.publicIpv6 = ip;
-                    if (this.publicIpv4 !== null && this.publicIpv6 !== null) {
-                        this.trace(domainName);
-                    }
-                });
+        publicIp.queryPublicIPAddresses((err, ipv4, ipv6) => {
+            if (err) {
+                Logger.error(`executer: ${err}`);
+                return;
+            }
+        
+            this.publicIpv4 = ipv4;
+            this.publicIpv6 = ipv6;
+
+            this.trace(domainName);
+        });
     }
 
     trace(domainName) {
