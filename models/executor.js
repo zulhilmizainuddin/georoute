@@ -4,9 +4,9 @@ const os = require('os');
 const net = require('net');
 const events = require('events');
 const PublicIp = require('nodejs-publicip');
+const Traceroute = require('nodejs-traceroute');
 
-const Tracert = require('./tracert');
-const Traceroute = require('./traceroute');
+const config = require('../config');
 const Logger = require('../util/logger');
 
 class Executor extends events.EventEmitter {
@@ -35,7 +35,7 @@ class Executor extends events.EventEmitter {
     }
 
     trace(domainName) {
-        const tracer = (os.platform() === 'win32') ? new Tracert() : new Traceroute();
+        const tracer = new Traceroute(config.tracerouteDelay);
 
         let destinationIp;
         tracer
