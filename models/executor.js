@@ -65,6 +65,9 @@ class Executor extends events.EventEmitter {
                     });
             })
             .on('hop', (hop) => {
+                let isCloseReceived = false;
+                let closeCode = null;
+
                 hopQueue.enqueue({
                     hop: hop.hop,
                     geoInfo: null
@@ -100,6 +103,10 @@ class Executor extends events.EventEmitter {
                                 break;
                             }
                         }
+
+                        if (isCloseReceived && hopQueue.size() === 0) {
+                            this.emit('close', closeCode);
+                        }
                     });
                 }
                 else {
@@ -126,10 +133,15 @@ class Executor extends events.EventEmitter {
                             break;
                         }
                     }
+
+                    if (isCloseReceived && hopQueue.size() === 0) {
+                        this.emit('close', closeCode);
+                    }
                 }
             })
             .on('close', (code) => {
-                this.emit('close', code);
+                isCloseReceived = true;
+                closeCode = code;
             });
 
         tracer.trace(domainName);
