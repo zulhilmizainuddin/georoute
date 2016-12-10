@@ -27,6 +27,9 @@ class Executor extends events.EventEmitter {
                 return;
             }
         
+            Logger.info(`executor: public ipv4 ${ipv4}`);
+            Logger.info(`executor: public ipv6 ${ipv6}`);
+
             this.publicIpv4 = ipv4;
             this.publicIpv6 = ipv6;
 
@@ -44,53 +47,42 @@ class Executor extends events.EventEmitter {
             })
             .on('destination', (destination) => {
                 destinationIp = destination;
-                const destinationGeoInfo = this.dbConnector.query(destination);
+                this.dbConnector.query(destination, (destinationGeoInfo) => {
+                    let result = {
+                            hop: '*',
+                            ip : destination,
+                            rtt1: '*',
+                            country: destinationGeoInfo.country !== '-' ? destinationGeoInfo.country : '*',
+                            city: destinationGeoInfo.city !== '-' ? destinationGeoInfo.city : '*',
+                            latitude: destinationGeoInfo.latitude !== '-' ? destinationGeoInfo.latitude : '*',
+                            longitude: destinationGeoInfo.longitude !== '-' ? destinationGeoInfo.longitude: '*'
+                        };
 
-                let result = null;
-                if (destinationGeoInfo !== null) {
-                    result = {
-                        hop: '*',
-                        ip : destination,
-                        rtt1: '*',
-                        country: destinationGeoInfo.country_long,
-                        city: destinationGeoInfo.city,
-                        latitude: destinationGeoInfo.latitude,
-                        longitude: destinationGeoInfo.longitude
-                    };
-                }
-                else {
-                    result = {
-                        hop: '*',
-                        ip: destination,
-                        rtt1: '*',
-                        country: '*',
-                        city: '*',
-                        latitude: '*',
-                        longitude: '*'
-                    };
-                }
-
-                Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
-                this.emit('destination', result);
+                    Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
+                    this.emit('destination', result);
+                    });
             })
             .on('hop', (hop) => {
                 if (hop.hop === 1) {
                     hop.ip = net.isIPv4(destinationIp) ? this.publicIpv4 : this.publicIpv6;
                 }
-
-                const geoInfo = this.dbConnector.query(hop.ip);
-
+                
                 let result = null;
-                if (geoInfo !== null) {
-                    result = {
-                        hop: hop.hop,
-                        ip: hop.ip,
-                        rtt1: hop.rtt1,
-                        country: geoInfo.country_long !== '-' ? geoInfo.country_long : '*',
-                        city: geoInfo.city !== '-' ? geoInfo.city : '*',
-                        latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
-                        longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
-                    };
+                if (net.isIP(hop.ip)) {
+                    this.dbConnector.query(hop.ip, (geoInfo) => {
+                        result = {
+                            hop: hop.hop,
+                            ip: hop.ip,
+                            rtt1: hop.rtt1,
+                            country: geoInfo.country !== '-' ? geoInfo.country : '*',
+                            city: geoInfo.city !== '-' ? geoInfo.city : '*',
+                            latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
+                            longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
+                        };
+
+                        Logger.info(`executor: geo info ${JSON.stringify(result)}`);
+                        this.emit('data', result);
+                    });
                 }
                 else {
                     result = {
@@ -102,10 +94,10 @@ class Executor extends events.EventEmitter {
                         latitude: '*',
                         longitude: '*'
                     };
-                }
 
-                Logger.info(`executor: geo info ${JSON.stringify(result)}`);
-                this.emit('data', result);
+                    Logger.info(`executor: geo info ${JSON.stringify(result)}`);
+                    this.emit('data', result);
+                }
             })
             .on('close', (code) => {
                 this.emit('close', code);
