@@ -41,7 +41,7 @@ class Executor extends events.EventEmitter {
     trace(domainName) {
         let isCloseReceived = false;
         let closeCode = null;
-        
+
         const hopQueue = new Queue();
         const tracer = new Traceroute(config.tracerouteDelay);
 
@@ -106,6 +106,8 @@ class Executor extends events.EventEmitter {
 
                         if (isCloseReceived && hopQueue.size() === 0) {
                             this.emit('close', closeCode);
+
+                            Logger.info(`executor: close with code ${closeCode} emitted to client`);
                         }
                     });
                 }
@@ -136,12 +138,16 @@ class Executor extends events.EventEmitter {
 
                     if (isCloseReceived && hopQueue.size() === 0) {
                         this.emit('close', closeCode);
+
+                        Logger.info(`executor: close with code ${closeCode} emitted to client`);
                     }
                 }
             })
             .on('close', (code) => {
                 isCloseReceived = true;
                 closeCode = code;
+
+                Logger.info(`executor: close with code ${code} received`);
             });
 
         tracer.trace(domainName);
