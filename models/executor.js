@@ -148,6 +148,12 @@ class Executor extends events.EventEmitter {
                 closeCode = code;
 
                 Logger.info(`executor: close with code ${code} received`);
+
+                if (isCloseReceived && hopQueue.size() === 0) {
+                    this.emit('close', closeCode);
+
+                    Logger.info(`executor: close with code ${closeCode} emitted to client`);
+                }
             });
 
         tracer.trace(domainName);
