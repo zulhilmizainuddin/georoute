@@ -39,6 +39,9 @@ class Executor extends events.EventEmitter {
     }
 
     trace(domainName) {
+        let isCloseReceived = false;
+        let closeCode = null;
+        
         const hopQueue = new Queue();
         const tracer = new Traceroute(config.tracerouteDelay);
 
@@ -65,9 +68,6 @@ class Executor extends events.EventEmitter {
                     });
             })
             .on('hop', (hop) => {
-                let isCloseReceived = false;
-                let closeCode = null;
-
                 hopQueue.enqueue({
                     hop: hop.hop,
                     geoInfo: null
