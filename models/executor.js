@@ -47,15 +47,15 @@ class Executor extends events.EventEmitter {
             })
             .on('destination', (destination) => {
                 destinationIp = destination;
-                this.dbConnector.query(destination, (destinationGeoInfo) => {
+                this.dbConnector.query(destination, (geoInfo) => {
                     let result = {
                             hop: '*',
                             ip : destination,
                             rtt1: '*',
-                            country: destinationGeoInfo.country !== '-' ? destinationGeoInfo.country : '*',
-                            city: destinationGeoInfo.city !== '-' ? destinationGeoInfo.city : '*',
-                            latitude: destinationGeoInfo.latitude !== '-' ? destinationGeoInfo.latitude : '*',
-                            longitude: destinationGeoInfo.longitude !== '-' ? destinationGeoInfo.longitude: '*'
+                            city: geoInfo.city !== '-' ? geoInfo.city : '*',
+                            country: geoInfo.country !== '-' ? geoInfo.country : '*',
+                            latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
+                            longitude: geoInfo.longitude !== 0 ? geoInfo.longitude: '*'
                         };
 
                     Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
@@ -74,8 +74,8 @@ class Executor extends events.EventEmitter {
                             hop: hop.hop,
                             ip: hop.ip,
                             rtt1: hop.rtt1,
-                            country: geoInfo.country !== '-' ? geoInfo.country : '*',
                             city: geoInfo.city !== '-' ? geoInfo.city : '*',
+                            country: geoInfo.country !== '-' ? geoInfo.country : '*',
                             latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
                             longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
                         };
