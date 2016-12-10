@@ -7,6 +7,7 @@ const PublicIp = require('nodejs-publicip');
 const Traceroute = require('nodejs-traceroute');
 
 const config = require('../config');
+const Queue = require('./queue');
 const Logger = require('../util/logger');
 
 class Executor extends events.EventEmitter {
@@ -38,6 +39,7 @@ class Executor extends events.EventEmitter {
     }
 
     trace(domainName) {
+        const hopQueue = new Queue();
         const tracer = new Traceroute(config.tracerouteDelay);
 
         let destinationIp;
@@ -63,6 +65,11 @@ class Executor extends events.EventEmitter {
                     });
             })
             .on('hop', (hop) => {
+                hopQueue.enqueue({
+                    hop: hop.hop,
+                    geoInfo: null
+                });
+
                 if (hop.hop === 1) {
                     hop.ip = net.isIPv4(destinationIp) ? this.publicIpv4 : this.publicIpv6;
                 }
@@ -81,7 +88,18 @@ class Executor extends events.EventEmitter {
                         };
 
                         Logger.info(`executor: geo info ${JSON.stringify(result)}`);
-                        this.emit('data', result);
+
+                        hopQueue.setValue(hop.hop, result);
+
+                        for (;;) {
+                            if (hopQueue.peek() && hopQueue.peek().geoInfo !== null) {
+                                const data = hopQueue.dequeue();
+                                this.emit('data', data.geoInfo);
+                            }
+                            else {
+                                break;
+                            }
+                        }
                     });
                 }
                 else {
@@ -94,9 +112,20 @@ class Executor extends events.EventEmitter {
                         latitude: '*',
                         longitude: '*'
                     };
-
+                    
                     Logger.info(`executor: geo info ${JSON.stringify(result)}`);
-                    this.emit('data', result);
+
+                    hopQueue.setValue(hop.hop, result);
+
+                    for (;;) {
+                        if (hopQueue.peek() && hopQueue.peek().geoInfo !== null) {
+                            const data = hopQueue.dequeue();
+                            this.emit('data', data.geoInfo);
+                        }
+                        else {
+                            break;
+                        }
+                    }
                 }
             })
             .on('close', (code) => {
