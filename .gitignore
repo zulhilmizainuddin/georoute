@@ -1,4 +1,9 @@
 # Dependency directories
 node_modules
 bower_components
+
+# Generated code
 .idea
+.vscode
+public/javascripts/dependencies.min.js
+public/javascripts/scripts.min.js
