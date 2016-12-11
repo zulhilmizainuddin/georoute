@@ -11,6 +11,7 @@ const compression = require('compression');
 const config = require('./config');
 const indexRoutes = require('./routes/index');
 const traceRoutes = require('./routes/trace');
+const validationMiddleware = require('./middlewares/validation');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', indexRoutes);
+app.use('/trace', validationMiddleware);
 app.use('/trace', traceRoutes);
 
 // catch 404 and forward to error handler

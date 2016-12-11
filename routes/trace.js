@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const validator = require('validator');
 const uuid = require('node-uuid');
 const HttpStatus = require('http-status-codes');
 
@@ -15,13 +14,6 @@ const Logger = require('../util/logger');
 
 router.post('/', (req, res, next) => {
     Logger.info(`trace domain name ${req.body.domainName} received`);
-
-    if (!validator.isFQDN(req.body.domainName + '') && !validator.isIP(req.body.domainName + '')) {
-        Logger.info(`trace not a valid domain name or ip received, returning http ${HttpStatus.BAD_REQUEST}`);
-
-        res.sendStatus(HttpStatus.BAD_REQUEST);
-        return;
-    }
 
     if (req.session.guid) {
         const previousPid = Cache.get(req.session.guid);
