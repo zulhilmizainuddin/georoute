@@ -16,8 +16,10 @@ class Executor extends events.EventEmitter {
 
         this.dbConnector = dbConnector;
 
-        this.publicIpv4 = null;
-        this.publicIpv6 = null;
+        this.hopQueue = new Queue();
+
+        this.isCloseReceived = false;
+        this.closeCode = null;
     }
 
     start(domainName) {
@@ -31,18 +33,11 @@ class Executor extends events.EventEmitter {
             Logger.info(`executor: public ipv4 ${ipv4}`);
             Logger.info(`executor: public ipv6 ${ipv6}`);
 
-            this.publicIpv4 = ipv4;
-            this.publicIpv6 = ipv6;
-
-            this.trace(domainName);
+            this.trace(domainName, ipv4, ipv6);
         });
     }
 
-    trace(domainName) {
-        let isCloseReceived = false;
-        let closeCode = null;
-
-        const hopQueue = new Queue();
+    trace(domainName, publicIpv4, publicIpv6) {
         const tracer = new Traceroute(config.tracerouteDelay);
 
         let destinationIp;
@@ -68,13 +63,13 @@ class Executor extends events.EventEmitter {
                     });
             })
             .on('hop', (hop) => {
-                hopQueue.enqueue({
+                this.hopQueue.enqueue({
                     hop: hop.hop,
                     geoInfo: null
                 });
 
                 if (hop.hop === 1) {
-                    hop.ip = net.isIPv4(destinationIp) ? this.publicIpv4 : this.publicIpv6;
+                    hop.ip = net.isIPv4(destinationIp) ? publicIpv4 : publicIpv6;
                 }
                 
                 let result = null;
@@ -92,23 +87,10 @@ class Executor extends events.EventEmitter {
 
                         Logger.info(`executor: geo info ${JSON.stringify(result)}`);
 
-                        hopQueue.setValue(hop.hop, result);
+                        this.hopQueue.setValue(hop.hop, result);
 
-                        for (;;) {
-                            if (hopQueue.peek() && hopQueue.peek().geoInfo !== null) {
-                                const data = hopQueue.dequeue();
-                                this.emit('data', data.geoInfo);
-                            }
-                            else {
-                                break;
-                            }
-                        }
-
-                        if (isCloseReceived && hopQueue.size() === 0) {
-                            this.emit('close', closeCode);
-
-                            Logger.info(`executor: close with code ${closeCode} emitted to client`);
-                        }
+                        this.emitQueuedGeoInfo();
+                        this.emitClose();
                     });
                 }
                 else {
@@ -124,39 +106,42 @@ class Executor extends events.EventEmitter {
                     
                     Logger.info(`executor: geo info ${JSON.stringify(result)}`);
 
-                    hopQueue.setValue(hop.hop, result);
+                    this.hopQueue.setValue(hop.hop, result);
 
-                    for (;;) {
-                        if (hopQueue.peek() && hopQueue.peek().geoInfo !== null) {
-                            const data = hopQueue.dequeue();
-                            this.emit('data', data.geoInfo);
-                        }
-                        else {
-                            break;
-                        }
-                    }
-
-                    if (isCloseReceived && hopQueue.size() === 0) {
-                        this.emit('close', closeCode);
-
-                        Logger.info(`executor: close with code ${closeCode} emitted to client`);
-                    }
+                    this.emitQueuedGeoInfo();
+                    this.emitClose();
                 }
             })
             .on('close', (code) => {
-                isCloseReceived = true;
-                closeCode = code;
+                this.isCloseReceived = true;
+                this.closeCode = code;
 
                 Logger.info(`executor: close with code ${code} received`);
 
-                if (isCloseReceived && hopQueue.size() === 0) {
-                    this.emit('close', closeCode);
-
-                    Logger.info(`executor: close with code ${closeCode} emitted to client`);
-                }
+                this.emitClose();
             });
 
         tracer.trace(domainName);
+    }
+
+    emitQueuedGeoInfo() {
+        for (;;) {
+            if (this.hopQueue.peek() && this.hopQueue.peek().geoInfo !== null) {
+                const data = this.hopQueue.dequeue();
+                this.emit('data', data.geoInfo);
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+    emitClose() {
+        if (this.isCloseReceived && this.hopQueue.size() === 0) {
+            this.emit('close', this.closeCode);
+
+            Logger.info(`executor: close with code ${this.closeCode} emitted to client`);
+        }
     }
 }
 
