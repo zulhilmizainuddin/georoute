@@ -1,6 +1,7 @@
 # georoute [![Code Climate](https://codeclimate.com/github/zulhilmizainuddin/georoute/badges/gpa.svg)](https://codeclimate.com/github/zulhilmizainuddin/georoute)
 
 Traceroute on a map using Node.js, Express, socket.io and Leaflet.
+Geolocation data retrieval by [geoip](https://github.com/zulhilmizainuddin/geoip).
 
 Supports Linux and Windows.
 
@@ -21,8 +22,6 @@ Get front end dependencies:
 Get server side dependencies:
 
     npm install
-    
-Download IP2LOCATION-LITE-DB5.BIN and IP2LOCATION-LITE-DB5.IPV6.BIN from https://lite.ip2location.com/database-ip-country-region-city-latitude-longitude and place into the databases directory.
     
 Start server:
 
