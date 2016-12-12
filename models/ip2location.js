@@ -6,11 +6,18 @@ const HttpStatus = require('http-status-codes');
 const config = require('../config');
 
 class Ip2Location {
-    query(ip, callback) {
-        request.get(`${config.ip2locationUrl}?${config.ipaddressQueryString}=${ip}`, (err, res, body) => {
-            if (!err && res.statusCode === HttpStatus.OK) {
-                return callback(JSON.parse(body));
-            }
+
+    query(ip) {
+        return new Promise((resolve, reject) => {
+
+            request.get(`${config.ip2locationUrl}?${config.ipaddressQueryString}=${ip}`, (err, res, body) => {
+                if (!err && res.statusCode === HttpStatus.OK) {
+                    resolve(JSON.parse(body));
+                }
+                else {
+                    reject(err);
+                }
+            });
         });
     }
 }
