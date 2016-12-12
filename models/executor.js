@@ -64,20 +64,6 @@ class Executor extends events.EventEmitter {
 
                         Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
                         this.emit('destination', result);
-                    })
-                    .catch((err) => {
-                        result = {
-                                hop: '*',
-                                ip : destination,
-                                rtt1: '*',
-                                city: '*',
-                                country: '*',
-                                latitude: '*',
-                                longitude: '*'
-                            };
-
-                        Logger.info(`executor: destination geo info ${JSON.stringify(result)}`);
-                        this.emit('destination', result);
                     });
             })
             .on('hop', (hop) => {
@@ -91,64 +77,26 @@ class Executor extends events.EventEmitter {
                 }
                 
                 let result = null;
-                if (net.isIP(hop.ip)) {
-                    this.dbConnector
-                        .query(hop.ip)
-                        .then((geoInfo) => {
-                            result = {
-                                hop: hop.hop,
-                                ip: hop.ip,
-                                rtt1: hop.rtt1,
-                                city: geoInfo.city !== '-' ? geoInfo.city : '*',
-                                country: geoInfo.country !== '-' ? geoInfo.country : '*',
-                                latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
-                                longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
-                            };
+                this.dbConnector
+                    .query(hop.ip)
+                    .then((geoInfo) => {
+                        result = {
+                            hop: hop.hop,
+                            ip: hop.ip,
+                            rtt1: hop.rtt1,
+                            city: geoInfo.city !== '-' ? geoInfo.city : '*',
+                            country: geoInfo.country !== '-' ? geoInfo.country : '*',
+                            latitude: geoInfo.latitude !== 0 ? geoInfo.latitude : '*',
+                            longitude: geoInfo.longitude !== 0 ? geoInfo.longitude : '*'
+                        };
 
-                            Logger.info(`executor: geo info ${JSON.stringify(result)}`);
+                        Logger.info(`executor: geo info ${JSON.stringify(result)}`);
 
-                            this.hopQueue.setValue(hop.hop, result);
+                        this.hopQueue.setValue(hop.hop, result);
 
-                            this.emitQueuedGeoInfo();
-                            this.emitClose();
-                        })
-                        .catch((err) => {
-                            result = {
-                                hop: hop.hop,
-                                ip: hop.ip,
-                                rtt1: hop.rtt1,
-                                country: '*',
-                                city: '*',
-                                latitude: '*',
-                                longitude: '*'
-                            };
-                            
-                            Logger.info(`executor: geo info ${JSON.stringify(result)}`);
-
-                            this.hopQueue.setValue(hop.hop, result);
-
-                            this.emitQueuedGeoInfo();
-                            this.emitClose();
-                        });
-                }
-                else {
-                    result = {
-                        hop: hop.hop,
-                        ip: hop.ip,
-                        rtt1: hop.rtt1,
-                        country: '*',
-                        city: '*',
-                        latitude: '*',
-                        longitude: '*'
-                    };
-                    
-                    Logger.info(`executor: geo info ${JSON.stringify(result)}`);
-
-                    this.hopQueue.setValue(hop.hop, result);
-
-                    this.emitQueuedGeoInfo();
-                    this.emitClose();
-                }
+                        this.emitQueuedGeoInfo();
+                        this.emitClose();
+                    });
             })
             .on('close', (code) => {
                 this.isCloseReceived = true;
