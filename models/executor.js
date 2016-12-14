@@ -23,18 +23,17 @@ class Executor extends events.EventEmitter {
     }
 
     start(domainName) {
-        const publicIp = new PublicIp();
-        publicIp.queryPublicIPAddresses((err, ipv4, ipv6) => {
-            if (err) {
-                Logger.error(`executer: ${err}`);
-                return;
-            }
-        
-            Logger.info(`executor: public ipv4 ${ipv4}`);
-            Logger.info(`executor: public ipv6 ${ipv6}`);
+        new PublicIp()
+            .queryPublicIPAddresses()
+            .then((result) => {
+                Logger.info(`executor: public ipv4 ${result.ipv4}`);
+                Logger.info(`executor: public ipv6 ${result.ipv6}`);
 
-            this.trace(domainName, ipv4, ipv6);
-        });
+                this.trace(domainName, result.ipv4, result.ipv6);
+            })
+            .catch((err) => {
+                Logger.info(`executor: ${err}`);
+            });
     }
 
     trace(domainName, publicIpv4, publicIpv6) {
