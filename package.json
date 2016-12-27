@@ -5,8 +5,8 @@
   "main": "./bin/www",
   "private": true,
   "scripts": {
-    "prestart": "npm run package-js-dependencies && npm run package-scripts",
     "start": "node ./bin/www",
+    "package": "npm run package-js-dependencies && npm run package-scripts",
     "package-scripts": "uglifyjs public/javascripts/template.js public/javascripts/mapping.js public/javascripts/sidebar.js public/javascripts/index.js -o public/javascripts/scripts.min.js -c -m",
     "package-js-dependencies": "uglifyjs bower_components/jquery/dist/jquery.min.js bower_components/bootstrap/dist/js/bootstrap.min.js bower_components/leaflet/dist/leaflet.js bower_components/sidebar-v2/js/leaflet-sidebar.min.js bower_components/validator-js/validator.min.js bower_components/toastr/toastr.min.js bower_components/socket.io-client/dist/socket.io.js bower_components/leaflet-spin/leaflet.spin.js bower_components/spin.js/spin.min.js public/leaflet.awesome-markers/leaflet.awesome-markers.js -o public/javascripts/dependencies.min.js -c -m"
   },
