@@ -23,6 +23,10 @@ Get server side dependencies:
 
     npm install
     
+Minify and concatenate JavaScript files:
+
+    npm run package
+
 Start server:
 
     npm start
