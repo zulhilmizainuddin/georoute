@@ -7,6 +7,8 @@ RUN yarn global add bower
 COPY bower.json /app/georoute
 RUN bower --allow-root install
 
+RUN yarn global add pm2
+
 COPY package.json /app/georoute
 RUN yarn install
 
@@ -16,4 +18,4 @@ RUN npm run package
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["pm2-docker", "bin/www"]
