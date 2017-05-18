@@ -1,13 +1,14 @@
-FROM node:boron
+FROM node:alpine
 
 RUN mkdir -p /app/georoute
 WORKDIR /app/georoute
 
-RUN yarn global add bower
+RUN apk add --update git && \
+    yarn global add bower && \
+    yarn global add pm2
+
 COPY bower.json /app/georoute
 RUN bower --allow-root install
-
-RUN yarn global add pm2
 
 COPY package.json /app/georoute
 RUN yarn install
