@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-    ip2locationUrl: 'http://geoip.tech/api/ip2location',
+    ip2locationUrl: 'http://geoip.tech/ip2location',
     ipaddressQueryString: 'ipaddress',
     sessionSecret: 'himitsu',
     logLevel: 'info',
