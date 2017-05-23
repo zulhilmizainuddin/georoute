@@ -62,6 +62,7 @@ $(document).ready(function() {
                         map.stopProgressIndicator();
                     })
                     .on('destination', function(destination) {
+                        console.log(destination);
                         destinationData = destination;
                     })
                     .on('data', function(data) {
