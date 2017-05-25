@@ -78,7 +78,7 @@ $(document).ready(function() {
                         sidebar.appendTable(data);
                     })
                     .on('close', function() {
-                        if (hopData && hopData[hopData.length - 1].ip !== destinationData.ip) {
+                        if (hopData[hopData.length - 1] && hopData[hopData.length - 1].ip !== destinationData.ip) {
                             map.addMarker(destinationData);
                             map.addPolylines(destinationData);
 
